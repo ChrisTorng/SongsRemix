@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SongsRemix</title>
+    <link rel="stylesheet" href="index.css"/>
+</head>
+<body>
+    <div class="player">
+        <div id="video"></div>
+        <div id="audios">
+            <audio id="vocal" src="./songs/約書亞-全心呼求/Vocal.mp3"></audio>
+            <audio id="other" src="./songs/約書亞-全心呼求/Other.mp3"></audio>
+            <audio id="piano" src="./songs/約書亞-全心呼求/Piano.mp3"></audio>
+            <audio id="guitar" src="./songs/約書亞-全心呼求/Guitar.mp3"></audio>
+            <audio id="bass" src="./songs/約書亞-全心呼求/Bass.mp3"></audio>
+            <audio id="drum" src="./songs/約書亞-全心呼求/Drum.mp3"></audio>
+        </div>
+        <div class="control">
+            <button id="play">Play</button>
+            <button id="pause">Pause</button>
+        </div>
+        <div class="part">
+            <span>Vocal</span>
+            <input type="radio" name="vocal-radio" id="vocal0" value="0"><label for="vocal0">0%</label>
+            <input type="radio" name="vocal-radio" id="vocal50" value="50"><label for="vocal50">50%</label>
+            <input type="radio" name="vocal-radio" id="vocal70" value="70"><label for="vocal70">70%</label>
+            <input type="radio" name="vocal-radio" id="vocal100" value="100"><label for="vocal100">100%</label>
+            <div id="vocal-slider"></div>
+        </div>
+    </div>
+
+    <h1>SongsRemix</h1>
+    <h2>UP 生命力教會</h2>
+    <h3>2023/7/9</h3>
+    <ol>
+        <li>約書亞-全心呼求</li>
+        <li>讚美之泉 13-翻轉地球</li>
+        <li>南崁希望教會-將全世界放在心上</li>
+        <li>讚美之泉 17-就是這個時刻</li>
+    </ol>
+    <script src="index.js"></script>
+</body>
+</html>

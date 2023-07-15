@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SongsRemix</title>
-    <link rel="stylesheet" href="index.css"/>
+    <link rel="stylesheet" href="index.css" />
 </head>
+
 <body>
     <div class="player">
         <div id="video"></div>
@@ -21,13 +23,7 @@
             <button id="play">Play</button>
             <button id="pause">Pause</button>
         </div>
-        <div class="part">
-            <span>Vocal</span>
-            <input type="radio" name="vocal-radio" id="vocal0" value="0"><label for="vocal0">0%</label>
-            <input type="radio" name="vocal-radio" id="vocal50" value="50"><label for="vocal50">50%</label>
-            <input type="radio" name="vocal-radio" id="vocal70" value="70"><label for="vocal70">70%</label>
-            <input type="radio" name="vocal-radio" id="vocal100" value="100"><label for="vocal100">100%</label>
-            <div id="vocal-slider"></div>
+        <div id="parts">
         </div>
     </div>
 
@@ -42,4 +38,5 @@
     </ol>
     <script src="index.js"></script>
 </body>
+
 </html>

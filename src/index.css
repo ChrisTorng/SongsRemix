@@ -1,8 +1,33 @@
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.selector {
+    flex: 0 0 50%
+}
+
+h1, h2, h3, ol {
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+  
 .player {
-    float: right;
+    flex: 0 0 50%
 }
 
 .title {
     display: inline-block;
     width: 50px;
+}
+
+@media (max-width: 600px) {
+  .container {
+    justify-content: flex-start;
+  }
+
+  .selector, .player {
+    flex: 0 0 100%;
+  }
 }

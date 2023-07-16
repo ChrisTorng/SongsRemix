@@ -22,16 +22,16 @@ function main() {
 function setPartsVolume(id, title) {
     const titleHtml = `<span class="title" id="${id}">${title}</span>`;
     const radiosHtml = getVolumeRadio(id, 0) +
-        getVolumeRadio(id, 25) +
+        getVolumeRadio(id, 25, true) +
         getVolumeRadio(id, 50) +
         getVolumeRadio(id, 75) +
-        getVolumeRadio(id, 100, true);
-    document.getElementById('parts').innerHTML += titleHtml + radiosHtml + '<br/>';
+        getVolumeRadio(id, 100);
+    document.getElementById('parts').innerHTML += titleHtml + radiosHtml + ' %<br/>';
 }
 function getVolumeRadio(id, volume, selected = false) {
     return `<input type="radio" name="${id}-radio" id="${id}${volume}"
-        onchange="setVolume(${id}, ${volume})" ${selected ? 'checked' : ''}
-        /><label id="${id}${volume}-label" for="${id}${volume}">${volume}%</label>`;
+        onclick="setVolume(${id}, ${volume})" ${selected ? 'checked' : ''}
+        /><label id="${id}${volume}-label" for="${id}${volume}">${volume}</label>`;
 }
 function setEvents() {
     document.getElementById('play').addEventListener('click', () => {
@@ -54,6 +54,7 @@ function setVolume(target, volume) {
     if (Array.isArray(target)) {
         target.forEach(audio => {
             document.getElementById(`${audio.id}${volume}`).checked = true;
+            audio.volume = volume / 100;
         });
         return;
     }

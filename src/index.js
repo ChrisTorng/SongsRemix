@@ -10,28 +10,30 @@ const partVolumeTemplate = document.getElementById('part-volume-template');
 main();
 function main() {
     allParts.forEach(audio => audio.load());
-    setPartsVolume('allParts', 'All');
-    setPartsVolume('vocal', 'Vocal');
-    setPartsVolume('other', 'Other');
-    setPartsVolume('piano', 'Piano');
-    setPartsVolume('guitar', 'Guitar');
-    setPartsVolume('bass', 'Bass');
-    setPartsVolume('drum', 'Drum');
+    setPartsVolume('allParts', '全部');
+    setPartsVolume('vocal', '人聲');
+    setPartsVolume('other', '其他');
+    setPartsVolume('piano', '鋼琴');
+    setPartsVolume('guitar', '吉它');
+    setPartsVolume('bass', '貝斯');
+    setPartsVolume('drum', '鼓　');
     setEvents();
 }
 function setPartsVolume(id, title) {
-    const titleHtml = `<span class="title" id="${id}">${title}</span>`;
+    const titleHtml = `<span id="${id}">${title}</span>`;
     const radiosHtml = getVolumeRadio(id, 0) +
         getVolumeRadio(id, 25, true) +
         getVolumeRadio(id, 50) +
         getVolumeRadio(id, 75) +
         getVolumeRadio(id, 100);
-    document.getElementById('parts').innerHTML += titleHtml + radiosHtml + ' %<br/>';
+    document.getElementById('parts').innerHTML +=
+        `<div class="part">${titleHtml} % ${radiosHtml}</div>
+`;
 }
 function getVolumeRadio(id, volume, selected = false) {
     return `<input type="radio" name="${id}-radio" id="${id}${volume}"
         onclick="setVolume(${id}, ${volume})" ${selected ? 'checked' : ''}
-        /><label id="${id}${volume}-label" for="${id}${volume}">${volume}</label>`;
+        /><label id="${id}${volume}-label" for="${id}${volume}" class="part">${volume} </label>`;
 }
 function setEvents() {
     document.getElementById('play').addEventListener('click', () => {

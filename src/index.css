@@ -17,9 +17,9 @@ h1, h2, h3, ol {
     flex: 0 0 50%
 }
 
-.title {
-    display: inline-block;
-    width: 50px;
+.part {
+    padding-top: 3px;
+    padding-bottom: 3px;
 }
 
 @media (max-width: 600px) {

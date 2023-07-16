@@ -27,7 +27,12 @@ h1, h2, h3, ol {
     justify-content: flex-start;
   }
 
-  .selector, .player {
+  .selector {
+    flex: 0 0 100%;
+    margin-bottom: 20px;
+  }
+
+  .player {
     flex: 0 0 100%;
   }
 }

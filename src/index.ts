@@ -53,17 +53,6 @@ function setEvents(): void {
     });
 }
 
-function getVolume(part: string): number{
-    var radios = document.getElementsByName(part) as NodeListOf<HTMLInputElement>;
-    for (const radio of radios) {
-        if (radio.checked) {
-            return radio.valueAsNumber;
-        }
-    }
-
-    return 0;
-}
-
 function setVolume(target: HTMLAudioElement | HTMLAudioElement[], volume: number): void {
     if (Array.isArray(target)) {
         target.forEach(audio => {

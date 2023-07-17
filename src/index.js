@@ -43,15 +43,6 @@ function setEvents() {
         allParts.forEach(audio => audio.pause());
     });
 }
-function getVolume(part) {
-    var radios = document.getElementsByName(part);
-    for (const radio of radios) {
-        if (radio.checked) {
-            return radio.valueAsNumber;
-        }
-    }
-    return 0;
-}
 function setVolume(target, volume) {
     if (Array.isArray(target)) {
         target.forEach(audio => {

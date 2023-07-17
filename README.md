@@ -6,6 +6,11 @@ Currently new songs needs to be added by me. Add [Issues](https://github.com/Chr
 
 Welcome any contribution, including coding, layout and new songs.
 
+## Requirements
+```
+npm install -g typescript serve
+```
+
 ## Run
 ```
 cd src

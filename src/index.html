@@ -24,19 +24,21 @@
         <div class="player">
             <div id="video"></div>
             <div id="audios">
-                <audio id="vocal"></audio>
-                <audio id="other"></audio>
-                <audio id="piano"></audio>
-                <audio id="guitar"></audio>
-                <audio id="bass"></audio>
-                <audio id="drum"></audio>
+                <audio id="vocal" preload="auto"></audio>
+                <audio id="other" preload="auto"></audio>
+                <audio id="piano" preload="auto"></audio>
+                <audio id="guitar" preload="auto"></audio>
+                <audio id="bass" preload="auto"></audio>
+                <audio id="drum" preload="auto"></audio>
             </div>
             <div class="control">
-                <button id="playOrPause">▶</button>
+                <button id="playOrPause" disabled="disabled">▶</button>
+                <span id="loading" style="display: none;">載入中...</span>
             </div>
             <div id="parts">
             </div>
             <div>
+                一開始播放，很可能會有聲音中斷，各聲部不同步的現象。這是因為第一次播放，音檔下載未完成的關係，只要重新整理瀏覽器 (點連結無效)，就會正常多了。<br />
                 建議一開始聆聽學習時，「全部 %」設為 25，再將自己的部份設為 100。<br />
                 稍後要跟著練習時，將「全部 %」設為 100，再將自己的部份設為 50/25。
             </div>

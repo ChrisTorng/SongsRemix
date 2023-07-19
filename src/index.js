@@ -17,12 +17,16 @@ function main() {
     setPartsVolume('guitar', '吉它');
     setPartsVolume('bass', '貝斯');
     setPartsVolume('drum', '鼓　');
+    setPartEnabled('allParts', true);
 }
 function loadSong(song) {
+    setPlayOrPauseEnabled(false);
+    showLoading(true);
     allParts.forEach(audio => {
         audio.src = `./songs/${song}/${audio.id}.mp3`;
         audio.load();
         audio.volume = 0.25;
+        setPartEnabled(audio.id, false);
     });
     return false;
 }
@@ -42,37 +46,45 @@ function getVolumeRadio(id, volume, selected = false) {
         onclick="setVolume(${id}, ${volume})" ${selected ? 'checked' : ''}
         /><label id="${id}${volume}-label" for="${id}${volume}" class="part">${volume} </label>`;
 }
+function showLoading(show) {
+    document.getElementById('loading').style.display = show ? 'inline' : 'none';
+}
+function setPlayOrPauseEnabled(enabled) {
+    document.getElementById('playOrPause').disabled = !enabled;
+    if (!enabled) {
+        document.getElementById('playOrPause').innerHTML = '▶';
+    }
+}
+function whenAllPartsReady() {
+    return allParts.every(audio => audio.readyState === HAVE_ENOUGH_DATA || audio.error);
+}
+function whenAllPartsReadySetPlayOrPauseEnabled() {
+    if (whenAllPartsReady()) {
+        setPlayOrPauseEnabled(true);
+        showLoading(false);
+    }
+}
 function setEvents() {
     document.getElementById('playOrPause').addEventListener('click', () => {
-        if (allParts[0].paused) {
+        if (vocal.paused) {
             allParts.forEach(audio => {
                 if (audio.readyState === HAVE_ENOUGH_DATA) {
                     audio.play();
                 }
             });
-            document.getElementById('playOrPause').innerHTML = '║ ';
+            document.getElementById('playOrPause').innerHTML = '&#10074;&#10074;';
         }
         else {
             allParts.forEach(audio => {
-                if (audio.readyState === HAVE_ENOUGH_DATA) {
-                    audio.pause();
-                }
+                audio.pause();
             });
             document.getElementById('playOrPause').innerHTML = '▶';
         }
     });
     allParts.forEach(audio => audio.oncanplaythrough = function () {
         console.log(audio.id, 'oncanplaythrough');
-        document.getElementById(`${audio.id}0`).disabled = false;
-        document.getElementById(`${audio.id}25`).disabled = false;
-        document.getElementById(`${audio.id}50`).disabled = false;
-        document.getElementById(`${audio.id}75`).disabled = false;
-        document.getElementById(`${audio.id}100`).disabled = false;
-        document.getElementById(`allParts0`).disabled = false;
-        document.getElementById(`allParts25`).disabled = false;
-        document.getElementById(`allParts50`).disabled = false;
-        document.getElementById(`allParts75`).disabled = false;
-        document.getElementById(`allParts100`).disabled = false;
+        setPartEnabled(audio.id, true);
+        whenAllPartsReadySetPlayOrPauseEnabled();
     });
     allParts.forEach(audio => audio.onerror = function () {
         switch (audio.error.code) {
@@ -92,12 +104,15 @@ function setEvents() {
                 console.log(audio.id, 'UNKNOWN_ERROR');
                 break;
         }
-        document.getElementById(`${audio.id}0`).disabled = true;
-        document.getElementById(`${audio.id}25`).disabled = true;
-        document.getElementById(`${audio.id}50`).disabled = true;
-        document.getElementById(`${audio.id}75`).disabled = true;
-        document.getElementById(`${audio.id}100`).disabled = true;
+        whenAllPartsReadySetPlayOrPauseEnabled();
     });
+}
+function setPartEnabled(id, enabled) {
+    document.getElementById(`${id}0`).disabled = !enabled;
+    document.getElementById(`${id}25`).disabled = !enabled;
+    document.getElementById(`${id}50`).disabled = !enabled;
+    document.getElementById(`${id}75`).disabled = !enabled;
+    document.getElementById(`${id}100`).disabled = !enabled;
 }
 function setVolume(target, volume) {
     if (Array.isArray(target)) {

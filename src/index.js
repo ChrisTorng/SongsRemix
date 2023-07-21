@@ -129,6 +129,7 @@ function setEvents() {
     });
     vocal.onended = function () {
         playOrPause.innerHTML = '▶';
+        vocal.currentTime = 0;
         progress.value = 0;
     };
     vocal.ontimeupdate = function () {

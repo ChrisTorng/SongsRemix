@@ -149,6 +149,7 @@ function setEvents(): void {
 
   vocal.onended = function () {
     playOrPause.innerHTML = '▶';
+    vocal.currentTime = 0;
     progress.value = 0;
   };
 

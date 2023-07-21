@@ -6,6 +6,12 @@ const bass = document.getElementById('bass') as HTMLAudioElement;
 const drum = document.getElementById('drum') as HTMLAudioElement;
 const allParts = [vocal, other, piano, guitar, bass, drum];
 
+const playOrPause = document.getElementById('playOrPause') as HTMLButtonElement;
+const loading = document.getElementById('loading') as HTMLSpanElement;
+const currentTime = document.getElementById('currentTime') as HTMLSpanElement;
+const progress = document.getElementById('progress') as HTMLProgressElement;
+const duration = document.getElementById('duration') as HTMLSpanElement;
+
 const HAVE_ENOUGH_DATA = 4;
 
 main();
@@ -27,6 +33,8 @@ function main(): void {
 function loadSong(song: string): boolean {
   setPlayOrPauseEnabled(false);
   showLoading(true);
+  progress.value = 0;
+
   allParts.forEach(audio => {
     audio.src = `./songs/${song}/${audio.id}.mp3`;
     audio.load();
@@ -56,13 +64,16 @@ function getVolumeRadio(id: string, volume: number, selected: boolean = false): 
 }
 
 function showLoading(show: boolean): void {
-  document.getElementById('loading')!.style.display = show ? 'inline' : 'none';
+  loading.style.display = show ? 'inline' : 'none';
+  currentTime.style.display = show ? 'none' : 'inline';
+  progress.style.display = show ? 'none' : 'inline';
+  duration.style.display = show ? 'none' : 'inline';
 }
 
 function setPlayOrPauseEnabled(enabled: boolean): void {
-  (document.getElementById('playOrPause')! as HTMLInputElement).disabled = !enabled;
+  playOrPause.disabled = !enabled;
   if (!enabled) {
-    document.getElementById('playOrPause')!.innerHTML = '▶';
+    playOrPause.innerHTML = '▶';
   }
 }
 
@@ -70,34 +81,48 @@ function whenAllPartsReady(): boolean {
   return allParts.every(audio => audio.readyState === HAVE_ENOUGH_DATA || audio.error);
 }
 
-function whenAllPartsReadySetPlayOrPauseEnabled(): void {
+function whenAllPartsReadySetPlay(): void {
   if (whenAllPartsReady()) {
     setPlayOrPauseEnabled(true);
     showLoading(false);
+    showSongTotalTime();
   }
 }
 
+function showSongTotalTime(): void {
+  const vocalTime = vocal.duration;
+  const time = getTime(vocalTime);
+  document.getElementById('duration')!.innerHTML = time;
+}
+
+function getTime(time: number): string {
+  const hours = Math.floor(time / 3600);
+  const minutes = Math.floor(time / 60);
+  const seconds = Math.floor(time % 60);
+  return `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+}
+
 function setEvents(): void {
-  document.getElementById('playOrPause')!.addEventListener('click', () => {
-    if (vocal.paused) {
+  playOrPause.addEventListener('click', () => {
+    if (vocal.paused || vocal.ended) {
       allParts.forEach(audio => {
         if (audio.readyState === HAVE_ENOUGH_DATA) {
           audio.play();
         }
       });
-      document.getElementById('playOrPause')!.innerHTML = '&#10074;&#10074;';
+      playOrPause.innerHTML = '&#10074;&#10074;';
     } else {
       allParts.forEach(audio => {
         audio.pause();
       });
-      document.getElementById('playOrPause')!.innerHTML = '▶';
+      playOrPause.innerHTML = '▶';
     }
   });
 
   allParts.forEach(audio => audio.oncanplaythrough = function () {
-    console.log(audio.id, 'oncanplaythrough');
+    //console.log(audio.id, 'oncanplaythrough');
     setPartEnabled(audio.id, true);
-    whenAllPartsReadySetPlayOrPauseEnabled();
+    whenAllPartsReadySetPlay();
   });
 
   allParts.forEach(audio => audio.onerror = function () {
@@ -119,8 +144,31 @@ function setEvents(): void {
         break;
     }
 
-    whenAllPartsReadySetPlayOrPauseEnabled();
+    whenAllPartsReadySetPlay();
   });
+
+  vocal.onended = function () {
+    playOrPause.innerHTML = '▶';
+    progress.value = 0;
+  };
+
+  vocal.ontimeupdate = function () {
+    const time = getTime(vocal.currentTime);
+    currentTime.innerHTML = time;
+
+    if (Number.isNaN(vocal.duration)) {
+      progress.value = 0;
+    } else {
+      progress.value = vocal.currentTime / vocal.duration * 100;
+    }
+  };
+
+  progress.oninput = function () {
+    const time = vocal.duration * progress.value / 100;
+    allParts.forEach(audio => {
+      audio.currentTime = time;
+    });
+  };
 }
 
 function setPartEnabled(id: string, enabled: boolean): void {

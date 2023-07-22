@@ -6,8 +6,10 @@ const guitar = document.getElementById('guitar');
 const bass = document.getElementById('bass');
 const drum = document.getElementById('drum');
 const allParts = [vocal, other, piano, guitar, bass, drum];
+const title = document.getElementById('title');
 const playOrPause = document.getElementById('playOrPause');
 const loading = document.getElementById('loading');
+const loadFailed = document.getElementById('loadFailed');
 const currentTime = document.getElementById('currentTime');
 const progress = document.getElementById('progress');
 const duration = document.getElementById('duration');
@@ -27,12 +29,14 @@ function main() {
     });
     setPartEnabled('allParts', true);
 }
-function loadSong(song) {
+function loadSong(target, url) {
+    let src = url ?? `./songs/${target.innerText}`;
+    title.innerText = target.innerText;
     setPlayOrPauseEnabled(false);
-    showLoading(true);
+    showLoadState(true, false);
     progress.value = 0;
     allParts.forEach(audio => {
-        audio.src = `./songs/${song}/${audio.id}.mp3`;
+        audio.src = `${src}/${audio.id}.mp3`;
         audio.load();
         setPartEnabled(audio.id, false);
     });
@@ -54,11 +58,12 @@ function getVolumeRadio(id, volume, selected = false) {
         onclick="setVolume(${id}, ${volume})" ${selected ? 'checked' : ''}
         /><label id="${id}${volume}-label" for="${id}${volume}" class="part">${volume} </label>`;
 }
-function showLoading(show) {
-    loading.style.display = show ? 'inline' : 'none';
-    currentTime.style.display = show ? 'none' : 'inline';
-    progress.style.display = show ? 'none' : 'inline';
-    duration.style.display = show ? 'none' : 'inline';
+function showLoadState(isLoading, isFailed) {
+    loading.style.display = isLoading ? 'inline' : 'none';
+    loadFailed.style.display = isFailed ? 'inline' : 'none';
+    currentTime.style.display = isLoading || isFailed ? 'none' : 'inline';
+    progress.style.display = isLoading || isFailed ? 'none' : 'inline';
+    duration.style.display = isLoading || isFailed ? 'none' : 'inline';
 }
 function setPlayOrPauseEnabled(enabled) {
     playOrPause.disabled = !enabled;
@@ -66,13 +71,20 @@ function setPlayOrPauseEnabled(enabled) {
         playOrPause.innerHTML = '▶';
     }
 }
-function whenAllPartsReady() {
+function allPartsFinished() {
     return allParts.every(audio => audio.readyState === HAVE_ENOUGH_DATA || audio.error);
 }
+function vocalReady() {
+    return vocal.readyState === HAVE_ENOUGH_DATA;
+}
 function whenAllPartsReadySetPlay() {
-    if (whenAllPartsReady()) {
+    if (allPartsFinished()) {
+        if (!vocalReady()) {
+            showLoadState(false, true);
+            return;
+        }
         setPlayOrPauseEnabled(true);
-        showLoading(false);
+        showLoadState(false, false);
         showSongTotalTime();
     }
 }

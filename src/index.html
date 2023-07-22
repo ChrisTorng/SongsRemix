@@ -15,19 +15,20 @@
             <h2>UP 生命力教會</h2>
             <h3>2023/7/23</h3>
             <ol>
-                <li><a href="#" onclick="loadSong('約書亞 - 美好事')">約書亞 - 美好事</a></li>
-                <li><a href="#" onclick="loadSong('讚美之泉 28 - 愛使我們勇敢-我們愛')">讚美之泉 28 - 愛使我們勇敢-我們愛</a></li>
-                <li><a href="#" onclick="loadSong('有情天 - 你愛的大能')">有情天 - 你愛的大能</a></li>
+                <li><a href="#" onclick="loadSong(this)">約書亞 - 美好事</a></li>
+                <li><a href="#" onclick="loadSong(this)">讚美之泉 28 - 愛使我們勇敢-我們愛</a></li>
+                <li><a href="#" onclick="loadSong(this)">有情天 - 你愛的大能</a></li>
             </ol>
             <h3>2023/7/9</h3>
             <ol>
-                <li><a href="#" onclick="loadSong('約書亞 - 全心呼求')">約書亞 - 全心呼求</a></li>
-                <li><a href="#" onclick="loadSong('讚美之泉 13 - 翻轉地球')">讚美之泉 13 - 翻轉地球</a></li>
-                <li>南崁希望教會 - 將全世界放在心上</li>
-                <li><a href="#" onclick="loadSong('讚美之泉 17 - 就是這個時刻')">讚美之泉 17 - 就是這個時刻</a></li>
+                <li><a href="#" onclick="loadSong(this)">約書亞 - 全心呼求</a></li>
+                <li><a href="#" onclick="loadSong(this)">讚美之泉 13 - 翻轉地球</a></li>
+                <li><a href="#" onclick="loadSong(this)">南崁希望教會 - 將全世界放在心上</a></li>
+                <li><a href="#" onclick="loadSong(this)">讚美之泉 17 - 就是這個時刻</a></li>
             </ol>
         </div>
         <div class="player">
+            <div id="title"></div>
             <div id="video"></div>
             <div id="audios">
                 <audio id="vocal" preload="auto"></audio>
@@ -39,10 +40,11 @@
             </div>
             <div class="control">
                 <button id="playOrPause" disabled="disabled">▶</button>
-                <span id="loading" style="display: none;">載入中...</span>
-                <span id="currentTime" style="display: none;"></span>
-                <input id="progress" type="range" min="0" max="100" value="0" style="display: none;" />
-                <span id="duration" style="display: none;"></span>
+                <span id="loading" class="hide">載入中...</span>
+                <span id="loadFailed" class="hide">載入失敗 </span>
+                <span id="currentTime" class="hide"></span>
+                <input id="progress" type="range" min="0" max="100" value="0" class="hide" />
+                <span id="duration" class="hide"></span>
             </div>
             <div id="parts">
             </div>

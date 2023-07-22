@@ -6,8 +6,10 @@ const bass = document.getElementById('bass') as HTMLAudioElement;
 const drum = document.getElementById('drum') as HTMLAudioElement;
 const allParts = [vocal, other, piano, guitar, bass, drum];
 
+const title = document.getElementById('title') as HTMLDivElement;
 const playOrPause = document.getElementById('playOrPause') as HTMLButtonElement;
 const loading = document.getElementById('loading') as HTMLSpanElement;
+const loadFailed = document.getElementById('loadFailed') as HTMLSpanElement;
 const currentTime = document.getElementById('currentTime') as HTMLSpanElement;
 const progress = document.getElementById('progress') as HTMLProgressElement;
 const duration = document.getElementById('duration') as HTMLSpanElement;
@@ -34,13 +36,16 @@ function main(): void {
   setPartEnabled('allParts', true);
 }
 
-function loadSong(song: string): boolean {
+function loadSong(target: HTMLAnchorElement, url?: string): boolean {
+  let src = url ?? `./songs/${target.innerText}`;
+
+  title.innerText = target.innerText;
   setPlayOrPauseEnabled(false);
-  showLoading(true);
+  showLoadState(true, false);
   progress.value = 0;
 
   allParts.forEach(audio => {
-    audio.src = `./songs/${song}/${audio.id}.mp3`;
+    audio.src = `${src}/${audio.id}.mp3`;
     audio.load();
     setPartEnabled(audio.id, false);
   });
@@ -66,11 +71,12 @@ function getVolumeRadio(id: string, volume: number, selected: boolean = false): 
         /><label id="${id}${volume}-label" for="${id}${volume}" class="part">${volume} </label>`;
 }
 
-function showLoading(show: boolean): void {
-  loading.style.display = show ? 'inline' : 'none';
-  currentTime.style.display = show ? 'none' : 'inline';
-  progress.style.display = show ? 'none' : 'inline';
-  duration.style.display = show ? 'none' : 'inline';
+function showLoadState(isLoading: boolean, isFailed: boolean): void {
+  loading.style.display = isLoading ? 'inline' : 'none';
+  loadFailed.style.display = isFailed ? 'inline' : 'none';
+  currentTime.style.display = isLoading || isFailed ? 'none' : 'inline';
+  progress.style.display = isLoading || isFailed ? 'none' : 'inline';
+  duration.style.display = isLoading || isFailed ? 'none' : 'inline';
 }
 
 function setPlayOrPauseEnabled(enabled: boolean): void {
@@ -80,14 +86,23 @@ function setPlayOrPauseEnabled(enabled: boolean): void {
   }
 }
 
-function whenAllPartsReady(): boolean {
+function allPartsFinished(): boolean {
   return allParts.every(audio => audio.readyState === HAVE_ENOUGH_DATA || audio.error);
 }
 
+function vocalReady(): boolean {
+  return vocal.readyState === HAVE_ENOUGH_DATA;
+}
+
 function whenAllPartsReadySetPlay(): void {
-  if (whenAllPartsReady()) {
+  if (allPartsFinished()) {
+    if (!vocalReady()) {
+      showLoadState(false, true);
+      return;
+    }
+  
     setPlayOrPauseEnabled(true);
-    showLoading(false);
+    showLoadState(false, false);
     showSongTotalTime();
   }
 }

@@ -27,6 +27,10 @@ function main(): void {
   setPartsVolume('bass', '貝斯');
   setPartsVolume('drum', '鼓　');
 
+  allParts.forEach(audio => {
+    audio.volume = 0.25;
+  });
+
   setPartEnabled('allParts', true);
 }
 
@@ -38,7 +42,6 @@ function loadSong(song: string): boolean {
   allParts.forEach(audio => {
     audio.src = `./songs/${song}/${audio.id}.mp3`;
     audio.load();
-    audio.volume = 0.25;
     setPartEnabled(audio.id, false);
   });
   return false;
@@ -99,6 +102,9 @@ function getTime(time: number): string {
   const hours = Math.floor(time / 3600);
   const minutes = Math.floor(time / 60);
   const seconds = Math.floor(time % 60);
+  if (hours === 0) {
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;    
+  }
   return `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 }
 

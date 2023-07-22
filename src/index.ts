@@ -48,7 +48,7 @@ function loadSong(target: HTMLAnchorElement, videoId: string, url?: string): boo
   showLoadState(true, false);
   progress.value = 0;
 
-  player.mute();
+  player.setVolume(1);
   player.cueVideoById(videoId);
 
   allParts.forEach(audio => {

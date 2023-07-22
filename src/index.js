@@ -38,7 +38,7 @@ function loadSong(target, videoId, url) {
     setPlayOrPauseEnabled(false);
     showLoadState(true, false);
     progress.value = 0;
-    player.mute();
+    player.setVolume(1);
     player.cueVideoById(videoId);
     allParts.forEach(audio => {
         audio.src = `${src}/${audio.id}.mp3`;

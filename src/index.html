@@ -12,24 +12,25 @@
     <div class="container">
         <div class="selector">
             <h1>SongsRemix</h1>
-            <h2>UP 生命力教會</h2>
-            <h3>2023/7/23</h3>
-            <ol>
-                <li><a href="#" onclick="loadSong(this)">約書亞 - 美好事</a></li>
-                <li><a href="#" onclick="loadSong(this)">讚美之泉 28 - 愛使我們勇敢-我們愛</a></li>
-                <li><a href="#" onclick="loadSong(this)">有情天 - 你愛的大能</a></li>
-            </ol>
-            <h3>2023/7/9</h3>
-            <ol>
-                <li><a href="#" onclick="loadSong(this)">約書亞 - 全心呼求</a></li>
-                <li><a href="#" onclick="loadSong(this)">讚美之泉 13 - 翻轉地球</a></li>
-                <li><a href="#" onclick="loadSong(this)">南崁希望教會 - 將全世界放在心上</a></li>
-                <li><a href="#" onclick="loadSong(this)">讚美之泉 17 - 就是這個時刻</a></li>
-            </ol>
+            <div id="songs" class="hide">
+                <h2>UP 生命力教會</h2>
+                <h3>2023/7/23</h3>
+                <ol>
+                    <li><a href="#" onclick="loadSong(this, 'qbHxAfTQQ5U')">約書亞 - 美好事</a></li>
+                    <li><a href="#" onclick="loadSong(this, 'w6TcDvwW1HM')">讚美之泉 28 - 愛使我們勇敢-我們愛</a></li>
+                    <li><a href="#" onclick="loadSong(this, '_MExqPiYRCg')">有情天 - 你愛的大能</a></li>
+                </ol>
+                <h3>2023/7/9</h3>
+                <ol>
+                    <li><a href="#" onclick="loadSong(this, 'UqR2jVaLglg')">約書亞 - 全心呼求</a></li>
+                    <li><a href="#" onclick="loadSong(this, 'nOG3gLLoVMw')">讚美之泉 13 - 翻轉地球</a></li>
+                    <li><a href="#" onclick="loadSong(this, 'uaYHaopPEM8')">南崁希望教會 - 將全世界放在心上</a></li>
+                    <li><a href="#" onclick="loadSong(this, '8xGdaxTpAYA')">讚美之泉 17 - 就是這個時刻</a></li>
+                </ol>
+            </div>
         </div>
-        <div class="player">
-            <div id="title"></div>
-            <div id="video"></div>
+        <div class="player-panel">
+            <div id="title">載入中</div>
             <div id="audios">
                 <audio id="vocal" preload="auto"></audio>
                 <audio id="other" preload="auto"></audio>
@@ -38,7 +39,9 @@
                 <audio id="bass" preload="auto"></audio>
                 <audio id="drum" preload="auto"></audio>
             </div>
+            <div id="player"></div>
             <div class="control">
+                <div>請勿操作 YouTube，會無法同步播放</div>
                 <button id="playOrPause" disabled="disabled">▶</button>
                 <span id="loading" class="hide">載入中...</span>
                 <span id="loadFailed" class="hide">載入失敗 </span>
@@ -56,6 +59,7 @@
         </div>
     </div>
     <script src="index.js"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
 </body>
 
 </html>

@@ -6,7 +6,9 @@ const guitar = document.getElementById('guitar');
 const bass = document.getElementById('bass');
 const drum = document.getElementById('drum');
 const allParts = [vocal, other, piano, guitar, bass, drum];
+const songs = document.getElementById('songs');
 const title = document.getElementById('title');
+const video = document.getElementById('video');
 const playOrPause = document.getElementById('playOrPause');
 const loading = document.getElementById('loading');
 const loadFailed = document.getElementById('loadFailed');
@@ -14,6 +16,7 @@ const currentTime = document.getElementById('currentTime');
 const progress = document.getElementById('progress');
 const duration = document.getElementById('duration');
 const HAVE_ENOUGH_DATA = 4;
+let player;
 main();
 function main() {
     setEvents();
@@ -29,12 +32,14 @@ function main() {
     });
     setPartEnabled('allParts', true);
 }
-function loadSong(target, url) {
+function loadSong(target, videoId, url) {
     let src = url ?? `./songs/${target.innerText}`;
     title.innerText = target.innerText;
     setPlayOrPauseEnabled(false);
     showLoadState(true, false);
     progress.value = 0;
+    player.mute();
+    player.cueVideoById(videoId);
     allParts.forEach(audio => {
         audio.src = `${src}/${audio.id}.mp3`;
         audio.load();
@@ -71,8 +76,45 @@ function setPlayOrPauseEnabled(enabled) {
         playOrPause.innerHTML = '▶';
     }
 }
+function onYouTubeIframeAPIReady() {
+    console.log('onYouTubeIframeAPIReady');
+    player = new YT.Player('player', {
+        playerVars: {
+            playsinline: 1,
+            controls: 0
+        },
+        events: {
+            onReady: onPlayerReady,
+            onStateChange: onPlayerStateChange
+        }
+    });
+}
+function onPlayerReady(event) {
+    console.log('onPlayerReady');
+    songs.style.display = 'block';
+    title.innerText = '請選擇歌曲';
+}
+function onPlayerStateChange(event) {
+    switch (event.data) {
+        case YT.PlayerState.CUED:
+            whenAllPartsReadySetPlay();
+            break;
+        case YT.PlayerState.PLAYING:
+            allParts.forEach(audio => {
+                if (audio.readyState === HAVE_ENOUGH_DATA) {
+                    audio.play();
+                }
+            });
+            playOrPause.innerHTML = '&#10074;&#10074;';
+            break;
+        case YT.PlayerState.ENDED:
+            onEnded();
+            break;
+    }
+}
 function allPartsFinished() {
-    return allParts.every(audio => audio.readyState === HAVE_ENOUGH_DATA || audio.error);
+    return player.getPlayerState() === YT.PlayerState.CUED &&
+        allParts.every(audio => audio.readyState === HAVE_ENOUGH_DATA || audio.error);
 }
 function vocalReady() {
     return vocal.readyState === HAVE_ENOUGH_DATA;
@@ -104,15 +146,15 @@ function getTime(time) {
 }
 function setEvents() {
     playOrPause.addEventListener('click', () => {
-        if (vocal.paused || vocal.ended) {
-            allParts.forEach(audio => {
-                if (audio.readyState === HAVE_ENOUGH_DATA) {
-                    audio.play();
-                }
-            });
-            playOrPause.innerHTML = '&#10074;&#10074;';
+        //if (vocal.paused || vocal.ended) {
+        const playerState = player.getPlayerState();
+        if (playerState === YT.PlayerState.UNSTARTED ||
+            playerState === YT.PlayerState.CUED ||
+            playerState === YT.PlayerState.PAUSED) {
+            player.playVideo();
         }
         else {
+            player.pauseVideo();
             allParts.forEach(audio => {
                 audio.pause();
             });
@@ -144,11 +186,7 @@ function setEvents() {
         }
         whenAllPartsReadySetPlay();
     });
-    vocal.onended = function () {
-        playOrPause.innerHTML = '▶';
-        vocal.currentTime = 0;
-        progress.value = 0;
-    };
+    vocal.onended = onEnded;
     vocal.ontimeupdate = function () {
         const time = getTime(vocal.currentTime);
         currentTime.innerHTML = time;
@@ -161,11 +199,23 @@ function setEvents() {
     };
     progress.oninput = function () {
         const time = vocal.duration * progress.value / 100;
+        player.seekTo(time, true);
         allParts.forEach(audio => {
             audio.currentTime = time;
         });
     };
 }
+function onEnded() {
+    playOrPause.innerHTML = '▶';
+    progress.value = 0;
+    player.pauseVideo();
+    player.seekTo(0, true);
+    allParts.forEach(audio => {
+        audio.pause();
+        audio.currentTime = 0;
+    });
+}
+;
 function setPartEnabled(id, enabled) {
     document.getElementById(`${id}0`).disabled = !enabled;
     document.getElementById(`${id}25`).disabled = !enabled;

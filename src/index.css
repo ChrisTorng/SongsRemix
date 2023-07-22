@@ -13,8 +13,14 @@ h1, h2, h3, ol {
     margin-bottom: 3px;
 }
   
-.player {
+.player-panel {
     flex: 0 0 50%
+}
+
+#player {
+  width: 320px;
+  height: 195px;
+  background-color: black;
 }
 
 .part {

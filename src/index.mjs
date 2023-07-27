@@ -1,4 +1,4 @@
-import { fetchSongsList, generateHTML } from "./songsList";
+import { fetchSongsList, generateHTML } from "./songsList.mjs";
 const vocal = document.getElementById('vocal');
 const other = document.getElementById('other');
 const piano = document.getElementById('piano');
@@ -6,7 +6,7 @@ const guitar = document.getElementById('guitar');
 const bass = document.getElementById('bass');
 const drum = document.getElementById('drum');
 const allParts = [vocal, other, piano, guitar, bass, drum];
-const songsList = document.getElementById('songsList');
+const songsListDiv = document.getElementById('songsList');
 const title = document.getElementById('title');
 const playOrPause = document.getElementById('playOrPause');
 const loading = document.getElementById('loading');
@@ -25,8 +25,10 @@ function main() {
     else {
         songsBaseUrl = '../../UpLifeSongs';
     }
+    window.loadSong = loadSong;
+    window.onYouTubeIframeAPIReady = () => onYouTubeIframeAPIReady();
     fetchSongsList(`${songsBaseUrl}/songsList.json`).then(songsList => {
-        generateHTML(songsList);
+        songsListDiv.innerHTML = generateHTML(songsList);
     });
     setEvents();
     setPartsVolume('allParts', '全部');
@@ -100,6 +102,7 @@ function onYouTubeIframeAPIReady() {
 }
 function onPlayerReady(event) {
     console.log('onPlayerReady');
+    songsListDiv.style.display = 'block';
     title.innerText = '請選擇歌曲';
 }
 function onPlayerStateChange(event) {

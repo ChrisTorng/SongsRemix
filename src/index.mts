@@ -1,3 +1,12 @@
+import { fetchSongsList, generateHTML } from "./songsList.mjs";
+
+declare global {
+  interface Window {
+    loadSong: (target: HTMLAnchorElement, videoId: string, url?: string) => boolean;
+    onYouTubeIframeAPIReady: () => void;
+  }
+}
+
 const vocal = document.getElementById('vocal') as HTMLAudioElement;
 const other = document.getElementById('other') as HTMLAudioElement;
 const piano = document.getElementById('piano') as HTMLAudioElement;
@@ -6,9 +15,8 @@ const bass = document.getElementById('bass') as HTMLAudioElement;
 const drum = document.getElementById('drum') as HTMLAudioElement;
 const allParts = [vocal, other, piano, guitar, bass, drum];
 
-const songs = document.getElementById('songs') as HTMLDivElement;
+const songsListDiv = document.getElementById('songsList') as HTMLDivElement;
 const title = document.getElementById('title') as HTMLDivElement;
-const video = document.getElementById('video') as HTMLDivElement;
 const playOrPause = document.getElementById('playOrPause') as HTMLButtonElement;
 const loading = document.getElementById('loading') as HTMLSpanElement;
 const loadFailed = document.getElementById('loadFailed') as HTMLSpanElement;
@@ -30,10 +38,17 @@ function main(): void {
     songsBaseUrl = '../../UpLifeSongs';
   }
 
-setEvents();
+  window.loadSong = loadSong;
+  window.onYouTubeIframeAPIReady = () => onYouTubeIframeAPIReady();
+
+  fetchSongsList(`${songsBaseUrl}/songsList.json`).then(songsList => {
+    songsListDiv.innerHTML = generateHTML(songsList);
+  });
+
+  setEvents();
 
   setPartsVolume('allParts', '全部');
-  setPartsVolume('vocal', '人聲');
+  setPartsVolume('vocal', '人聲');  
   setPartsVolume('other', '其他');
   setPartsVolume('piano', '鋼琴');
   setPartsVolume('guitar', '吉它');
@@ -116,7 +131,7 @@ function onYouTubeIframeAPIReady() {
 
 function onPlayerReady(event: { target: YT.Player }) {
   console.log('onPlayerReady');
-  songs.style.display = 'block';
+  songsListDiv.style.display = 'block';
   title.innerText = '請選擇歌曲';
 }
 

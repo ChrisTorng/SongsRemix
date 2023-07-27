@@ -29,7 +29,7 @@ function generateHTML(songsList: SongsList): string {
     for (const group of songsList.groups) {
         html += `<h3>${group.subTitle}</h3><ol>`;
         for (const song of group.songs) {
-            html += `<li><a href="#" onclick="loadSong(this, '${song.youtubeId}')">${song.name}</a></li>`;
+            html += `<li><a href="#title" onclick="loadSong(this, '${song.youtubeId}')">${song.name}</a></li>`;
         }
         html += `</ol>`;
     }

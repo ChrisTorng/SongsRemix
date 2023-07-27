@@ -14,7 +14,7 @@ npm install -g typescript http-server
 ## Run
 ```
 cd src
-npx http-server -p 3000
+npx http-server -p 3000 -c-1
 ```
 Or Windows `run.cmd`.
 

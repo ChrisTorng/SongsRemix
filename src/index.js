@@ -102,6 +102,7 @@ function onPlayerReady(event) {
     console.log('onPlayerReady');
     songsListDiv.style.display = 'block';
     title.innerText = '請選擇歌曲';
+    location.hash = '#head';
 }
 function onPlayerStateChange(event) {
     switch (event.data) {

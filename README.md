@@ -8,14 +8,16 @@ Welcome any contribution, including coding, layout and new songs.
 
 ## Requirements
 ```
-npm install -g typescript serve
+npm install -g typescript http-server
 ```
 
 ## Run
 ```
 cd src
-npx serve
+npx http-server -p 3000
 ```
+Or Windows `run.cmd`.
+
 Open [http://localhost:3000](http://localhost:3000).
 
 ## Development

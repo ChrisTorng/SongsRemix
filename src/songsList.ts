@@ -13,15 +13,18 @@ type SongsList = {
     groups: Group[];
 }
 
-export async function fetchSongsList(url: string): Promise<SongsList> {
-    const response = await fetch(url);
+async function fetchSongsList(url: string): Promise<SongsList> {
+    const response = await fetch(url, {
+        method: 'GET', 
+        cache: 'no-store', 
+      });
     if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
     }
     return await response.json() as SongsList;
 }
 
-export function generateHTML(songsList: SongsList): string {
+function generateHTML(songsList: SongsList): string {
     let html = `<h2>${songsList.title}</h2>`;
     for (const group of songsList.groups) {
         html += `<h3>${group.subTitle}</h3><ol>`;

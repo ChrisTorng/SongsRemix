@@ -1,12 +1,3 @@
-import { fetchSongsList, generateHTML } from "./songsList.mjs";
-
-declare global {
-  interface Window {
-    loadSong: (target: HTMLAnchorElement, videoId: string, url?: string) => boolean;
-    onYouTubeIframeAPIReady: () => void;
-  }
-}
-
 const vocal = document.getElementById('vocal') as HTMLAudioElement;
 const other = document.getElementById('other') as HTMLAudioElement;
 const piano = document.getElementById('piano') as HTMLAudioElement;
@@ -37,9 +28,6 @@ function main(): void {
   } else {
     songsBaseUrl = '../../UpLifeSongs';
   }
-
-  window.loadSong = loadSong;
-  window.onYouTubeIframeAPIReady = () => onYouTubeIframeAPIReady();
 
   fetchSongsList(`${songsBaseUrl}/songsList.json`).then(songsList => {
     songsListDiv.innerHTML = generateHTML(songsList);

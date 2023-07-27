@@ -16,9 +16,16 @@ const currentTime = document.getElementById('currentTime');
 const progress = document.getElementById('progress');
 const duration = document.getElementById('duration');
 const HAVE_ENOUGH_DATA = 4;
+let songsBaseUrl = 'http://localhost:3001';
 let player;
 main();
 function main() {
+    if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+        songsBaseUrl = 'http://localhost:3001';
+    }
+    else {
+        songsBaseUrl = '../../UpLifeSongs';
+    }
     setEvents();
     setPartsVolume('allParts', '全部');
     setPartsVolume('vocal', '人聲');
@@ -33,7 +40,7 @@ function main() {
     setPartEnabled('allParts', true);
 }
 function loadSong(target, videoId, url) {
-    let src = url ?? `./songs/${target.innerText}`;
+    let src = url ?? `${songsBaseUrl}/${target.innerText}`;
     title.innerText = target.innerText;
     setPlayOrPauseEnabled(false);
     showLoadState(true, false);

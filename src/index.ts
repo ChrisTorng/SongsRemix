@@ -17,13 +17,20 @@ const progress = document.getElementById('progress') as HTMLProgressElement;
 const duration = document.getElementById('duration') as HTMLSpanElement;
 
 const HAVE_ENOUGH_DATA = 4;
+let songsBaseUrl = 'http://localhost:3001';
 
 let player: YT.Player;
 
 main();
 
 function main(): void {
-  setEvents();
+  if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+    songsBaseUrl = 'http://localhost:3001';
+  } else {
+    songsBaseUrl = '../../UpLifeSongs';
+  }
+
+setEvents();
 
   setPartsVolume('allParts', '全部');
   setPartsVolume('vocal', '人聲');
@@ -41,7 +48,7 @@ function main(): void {
 }
 
 function loadSong(target: HTMLAnchorElement, videoId: string, url?: string): boolean {
-  let src = url ?? `./songs/${target.innerText}`;
+  let src = url ?? `${songsBaseUrl}/${target.innerText}`;
 
   title.innerText = target.innerText;
   setPlayOrPauseEnabled(false);

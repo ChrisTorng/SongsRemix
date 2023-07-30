@@ -90,11 +90,24 @@ function onYouTubeIframeAPIReady() {
     player = new YT.Player('player', {
         playerVars: {
             playsinline: 1,
-            controls: 0
+            //controls: 0
         },
         events: {
             onReady: onPlayerReady,
-            onStateChange: onPlayerStateChange
+            onStateChange: onPlayerStateChange,
+            onError: (event) => {
+                console.log('onError', event.data);
+                showLoadState(false, true);
+            },
+            onPlaybackQualityChange: (event) => {
+                console.log('onPlaybackQualityChange', event.data);
+            },
+            onPlaybackRateChange: (event) => {
+                console.log('onPlaybackRateChange', event.data);
+            },
+            onApiChange: (event) => {
+                console.log('onApiChange', event.target);
+            },
         }
     });
 }
@@ -106,10 +119,18 @@ function onPlayerReady(event) {
 }
 function onPlayerStateChange(event) {
     switch (event.data) {
+        case YT.PlayerState.UNSTARTED:
+            console.log('onPlayerStateChange UNSTARTED');
+            break;
+        case YT.PlayerState.BUFFERING:
+            console.log('onPlayerStateChange BUFFERING');
+            break;
         case YT.PlayerState.CUED:
+            console.log('onPlayerStateChange CUED');
             whenAllPartsReadySetPlay();
             break;
         case YT.PlayerState.PLAYING:
+            console.log('onPlayerStateChange PLAYING');
             allParts.forEach(audio => {
                 if (audio.readyState === HAVE_ENOUGH_DATA) {
                     audio.play();
@@ -117,7 +138,13 @@ function onPlayerStateChange(event) {
             });
             playOrPause.innerHTML = '&#10074;&#10074;';
             break;
+        case YT.PlayerState.PAUSED:
+            console.log('onPlayerStateChange PAUSED');
+            allParts.forEach(audio => {
+                audio.pause();
+            });
         case YT.PlayerState.ENDED:
+            console.log('onPlayerStateChange ENDED');
             onEnded();
             break;
     }

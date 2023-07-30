@@ -36,7 +36,7 @@ function main(): void {
   setEvents();
 
   setPartsVolume('allParts', '全部');
-  setPartsVolume('vocal', '人聲');  
+  setPartsVolume('vocal', '人聲');
   setPartsVolume('other', '其他');
   setPartsVolume('piano', '鋼琴');
   setPartsVolume('guitar', '吉它');
@@ -72,10 +72,10 @@ function loadSong(target: HTMLAnchorElement, videoId: string, url?: string): boo
 function setPartsVolume(id: string, title: string): void {
   const titleHtml: string = `<span id="${id}">${title}</span>`;
   const radiosHtml: string = getVolumeRadio(id, 0) +
-                             getVolumeRadio(id, 25, true) +
-                             getVolumeRadio(id, 50) +
-                             getVolumeRadio(id, 75) +
-                             getVolumeRadio(id, 100);
+    getVolumeRadio(id, 25, true) +
+    getVolumeRadio(id, 50) +
+    getVolumeRadio(id, 75) +
+    getVolumeRadio(id, 100);
 
   document.getElementById('parts')!.innerHTML +=
     `<div class="part">${titleHtml} % ${radiosHtml}</div>
@@ -108,11 +108,24 @@ function onYouTubeIframeAPIReady() {
   player = new YT.Player('player', {
     playerVars: {
       playsinline: 1,
-      controls: 0
+      //controls: 0
     },
     events: {
       onReady: onPlayerReady,
-      onStateChange: onPlayerStateChange
+      onStateChange: onPlayerStateChange,
+      onError: (event: { data: number }) => {
+        console.log('onError', event.data);
+        showLoadState(false, true);
+      },
+      onPlaybackQualityChange: (event: { data: string }) => {
+        console.log('onPlaybackQualityChange', event.data);
+      },
+      onPlaybackRateChange: (event: { data: number }) => {
+        console.log('onPlaybackRateChange', event.data);
+      },
+      onApiChange: (event: YT.PlayerEvent) => {
+        console.log('onApiChange', event.target);
+      },
     }
   });
 }
@@ -126,10 +139,18 @@ function onPlayerReady(event: { target: YT.Player }) {
 
 function onPlayerStateChange(event: { data: number }) {
   switch (event.data) {
+    case YT.PlayerState.UNSTARTED:
+      console.log('onPlayerStateChange UNSTARTED');
+      break;
+    case YT.PlayerState.BUFFERING:
+      console.log('onPlayerStateChange BUFFERING');
+      break;
     case YT.PlayerState.CUED:
+      console.log('onPlayerStateChange CUED');
       whenAllPartsReadySetPlay();
       break;
     case YT.PlayerState.PLAYING:
+      console.log('onPlayerStateChange PLAYING');
       allParts.forEach(audio => {
         if (audio.readyState === HAVE_ENOUGH_DATA) {
           audio.play();
@@ -137,10 +158,16 @@ function onPlayerStateChange(event: { data: number }) {
       });
       playOrPause.innerHTML = '&#10074;&#10074;';
       break;
+    case YT.PlayerState.PAUSED:
+      console.log('onPlayerStateChange PAUSED');
+      allParts.forEach(audio => {
+        audio.pause();
+      });
     case YT.PlayerState.ENDED:
+      console.log('onPlayerStateChange ENDED');
       onEnded();
       break;
-    }
+  }
 }
 
 function allPartsFinished(): boolean {
@@ -158,7 +185,7 @@ function whenAllPartsReadySetPlay(): void {
       showLoadState(false, true);
       return;
     }
-  
+
     setPlayOrPauseEnabled(true);
     showLoadState(false, false);
     showSongTotalTime();
@@ -176,7 +203,7 @@ function getTime(time: number): string {
   const minutes = Math.floor(time / 60);
   const seconds = Math.floor(time % 60);
   if (hours === 0) {
-    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;    
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   }
   return `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 }
@@ -184,10 +211,10 @@ function getTime(time: number): string {
 function setEvents(): void {
   playOrPause.addEventListener('click', () => {
     //if (vocal.paused || vocal.ended) {
-      const playerState = player.getPlayerState();
+    const playerState = player.getPlayerState();
     if (playerState === YT.PlayerState.UNSTARTED ||
-        playerState === YT.PlayerState.CUED ||
-        playerState === YT.PlayerState.PAUSED) {
+      playerState === YT.PlayerState.CUED ||
+      playerState === YT.PlayerState.PAUSED) {
       player.playVideo();
     } else {
       player.pauseVideo();
@@ -227,7 +254,7 @@ function setEvents(): void {
   });
 
   vocal.onended = onEnded;
-  
+
   vocal.ontimeupdate = function () {
     const time = getTime(vocal.currentTime);
     currentTime.innerHTML = time;

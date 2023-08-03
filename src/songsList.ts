@@ -1,37 +1,67 @@
 type Song = {
-    name: string;
-    youtubeId: string;
+  name: string;
+  youtubeId: string;
 }
 
 type Group = {
-    subTitle: string;
-    songs: Song[];
+  subTitle: string;
+  songs: Song[];
 }
 
 type SongsList = {
-    title: string;
-    groups: Group[];
+  title: string;
+  groups: Group[];
+}
+
+function getSongsBaseUrl(): string | null {
+  const urlParams = new URLSearchParams(window.location.search);
+  const songsListBase = urlParams.get('songsList');
+  if (songsListBase) {
+    return songsListBase;
+  }
+
+  if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+    location.href = '?songsList=//localhost:30012';
+  } else {
+    location.href = '?songsList=../../UpLifeSongs';
+  }
+  return null;
+}
+
+async function loadSongsList(songsBaseUrl: string): Promise<string> {
+  let songsListJson: SongsList;
+  try {
+    songsListJson = await fetchSongsList(songsBaseUrl + '/songsList.json');
+  } catch (e) {
+    throw `載入曲目清單失敗: ${e}`;
+  }
+
+  try {
+    return generateHTML(songsListJson);
+  } catch (e) {
+    throw`讀取曲目清單失敗: ${e}`;
+  }
 }
 
 async function fetchSongsList(url: string): Promise<SongsList> {
-    const response = await fetch(url, {
-        method: 'GET', 
-        cache: 'no-store', 
-      });
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return await response.json() as SongsList;
+  const response = await fetch(url, {
+    method: 'GET',
+    cache: 'no-store',
+  });
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return await response.json() as SongsList;
 }
 
 function generateHTML(songsList: SongsList): string {
-    let html = `<h2>${songsList.title}</h2>`;
-    for (const group of songsList.groups) {
-        html += `<h3>${group.subTitle}</h3><ol>`;
-        for (const song of group.songs) {
-            html += `<li><a href="#title" onclick="loadSong(this, '${song.youtubeId}')">${song.name}</a></li>`;
-        }
-        html += `</ol>`;
+  let html = `<h2>${songsList.title}</h2>`;
+  for (const group of songsList.groups) {
+    html += `<h3>${group.subTitle}</h3><ol>`;
+    for (const song of group.songs) {
+      html += `<li><a href="#title" onclick="loadSong(this, '${song.youtubeId}')">${song.name}</a></li>`;
     }
-    return html;
+      html += `</ol>`;
+  }
+  return html;
 }

@@ -16,22 +16,25 @@ const progress = document.getElementById('progress') as HTMLProgressElement;
 const duration = document.getElementById('duration') as HTMLSpanElement;
 
 const HAVE_ENOUGH_DATA = 4;
-let songsBaseUrl = 'http://localhost:3001';
 
+let songsBaseUrl: string;
 let player: YT.Player;
 
 main();
 
-function main(): void {
-  if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
-    songsBaseUrl = 'http://localhost:3001';
-  } else {
-    songsBaseUrl = '../../UpLifeSongs';
+async function main(): Promise<void> {
+  const gotSongsBaseUrl = getSongsBaseUrl();
+  if (!gotSongsBaseUrl) {
+    return;
   }
-
-  fetchSongsList(`${songsBaseUrl}/songsList.json`).then(songsList => {
-    songsListDiv.innerHTML = generateHTML(songsList);
-  });
+  
+  songsBaseUrl = gotSongsBaseUrl;
+  try {
+    songsListDiv.innerHTML = await loadSongsList(songsBaseUrl);
+  } catch (e: any) {
+    songsListDiv.innerText = e.toString();
+    return;
+  }
 
   setEvents();
 
@@ -58,7 +61,7 @@ function loadSong(target: HTMLAnchorElement, videoId: string, url?: string): boo
   showLoadState(true, false);
   progress.value = 0;
 
-  player.setVolume(1);
+  player.pauseVideo();
   player.cueVideoById(videoId);
 
   allParts.forEach(audio => {
@@ -108,7 +111,7 @@ function onYouTubeIframeAPIReady() {
   player = new YT.Player('player', {
     playerVars: {
       playsinline: 1,
-      //controls: 0
+      controls: 0
     },
     events: {
       onReady: onPlayerReady,
@@ -132,8 +135,9 @@ function onYouTubeIframeAPIReady() {
 
 function onPlayerReady(event: { target: YT.Player }) {
   console.log('onPlayerReady');
+  player.setVolume(1);
   songsListDiv.style.display = 'block';
-  title.innerText = '請選擇歌曲';
+  title.innerText = '請選擇曲目';
   location.hash = '#head';
 }
 
@@ -165,7 +169,6 @@ function onPlayerStateChange(event: { data: number }) {
       });
     case YT.PlayerState.ENDED:
       console.log('onPlayerStateChange ENDED');
-      onEnded();
       break;
   }
 }

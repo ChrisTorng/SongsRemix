@@ -15,19 +15,22 @@ const currentTime = document.getElementById('currentTime');
 const progress = document.getElementById('progress');
 const duration = document.getElementById('duration');
 const HAVE_ENOUGH_DATA = 4;
-let songsBaseUrl = 'http://localhost:3001';
+let songsBaseUrl;
 let player;
 main();
-function main() {
-    if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
-        songsBaseUrl = 'http://localhost:3001';
+async function main() {
+    const gotSongsBaseUrl = getSongsBaseUrl();
+    if (!gotSongsBaseUrl) {
+        return;
     }
-    else {
-        songsBaseUrl = '../../UpLifeSongs';
+    songsBaseUrl = gotSongsBaseUrl;
+    try {
+        songsListDiv.innerHTML = await loadSongsList(songsBaseUrl);
     }
-    fetchSongsList(`${songsBaseUrl}/songsList.json`).then(songsList => {
-        songsListDiv.innerHTML = generateHTML(songsList);
-    });
+    catch (e) {
+        songsListDiv.innerText = e.toString();
+        return;
+    }
     setEvents();
     setPartsVolume('allParts', '全部');
     setPartsVolume('vocal', '人聲');
@@ -47,7 +50,7 @@ function loadSong(target, videoId, url) {
     setPlayOrPauseEnabled(false);
     showLoadState(true, false);
     progress.value = 0;
-    player.setVolume(1);
+    player.pauseVideo();
     player.cueVideoById(videoId);
     allParts.forEach(audio => {
         audio.src = `${src}/${audio.id}.mp3`;
@@ -90,7 +93,7 @@ function onYouTubeIframeAPIReady() {
     player = new YT.Player('player', {
         playerVars: {
             playsinline: 1,
-            //controls: 0
+            controls: 0
         },
         events: {
             onReady: onPlayerReady,
@@ -113,8 +116,9 @@ function onYouTubeIframeAPIReady() {
 }
 function onPlayerReady(event) {
     console.log('onPlayerReady');
+    player.setVolume(1);
     songsListDiv.style.display = 'block';
-    title.innerText = '請選擇歌曲';
+    title.innerText = '請選擇曲目';
     location.hash = '#head';
 }
 function onPlayerStateChange(event) {
@@ -145,7 +149,6 @@ function onPlayerStateChange(event) {
             });
         case YT.PlayerState.ENDED:
             console.log('onPlayerStateChange ENDED');
-            onEnded();
             break;
     }
 }

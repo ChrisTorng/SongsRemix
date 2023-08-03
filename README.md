@@ -1,9 +1,4 @@
-[English](#english)
-
-[English SongsRemix](#songsremixenglish)
-
-[SongsRemix English](#songsremix-english)
-
+[English](#songsremix-english)
 
 # [SongsRemix](https://christorng.github.io/SongsRemix/src/)
 
@@ -33,10 +28,6 @@ cd src
 tsc -w
 ```
 
-# English
-# [SongsRemix](https://christorng.github.io/SongsRemix/src/)
-
-<a name="songsremixenglish"></a>
 # [SongsRemix](https://christorng.github.io/SongsRemix/src/) English
 
 Live remix splitted song's vocal and instruments. Designed for pratices. [Live demo](https://christorng.github.io/SongsRemix/src/).

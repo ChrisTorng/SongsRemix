@@ -75,10 +75,10 @@ function loadSong(target: HTMLAnchorElement, videoId: string, url?: string): boo
 function setPartsVolume(id: string, title: string): void {
   const titleHtml: string = `<span id="${id}">${title}</span>`;
   const radiosHtml: string = getVolumeRadio(id, 0) +
-    getVolumeRadio(id, 25, true) +
-    getVolumeRadio(id, 50) +
-    getVolumeRadio(id, 75) +
-    getVolumeRadio(id, 100);
+                             getVolumeRadio(id, 25, true) +
+                             getVolumeRadio(id, 50) +
+                             getVolumeRadio(id, 75) +
+                             getVolumeRadio(id, 100);
 
   document.getElementById('parts')!.innerHTML +=
     `<div class="part">${titleHtml} % ${radiosHtml}</div>

@@ -39,13 +39,23 @@ async function fetchSongsList(url) {
     return await response.json();
 }
 function generateHTML(songsList) {
+    let isFirst = true;
     let html = `<h2>${songsList.title}</h2>`;
     for (const group of songsList.groups) {
-        html += `<h3>${group.subTitle}</h3><ol>`;
+        html += `<h3 onclick="toggleCollapsed(this);">
+<span class="arrow ${isFirst ? 'arrow-expanded' : ''}"></span> ${group.subTitle}</h3>`;
+        html += `<ol ${isFirst ? '' : 'class="collapsed"'}>`;
         for (const song of group.songs) {
             html += `<li><a href="#title" onclick="loadSong(this, '${song.youtubeId}')">${song.name}</a></li>`;
         }
         html += `</ol>`;
+        isFirst = false;
     }
     return html;
+}
+function toggleCollapsed(target) {
+    let arrow = target.firstElementChild;
+    arrow.classList.toggle('arrow-expanded');
+    let next = target.nextElementSibling;
+    next.classList.toggle('collapsed');
 }

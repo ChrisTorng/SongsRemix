@@ -1,18 +1,18 @@
 .container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-end;
 }
 
 .selector {
-    flex: 0 0 50%
+    flex: 0 0 50%;
+    margin-bottom: 20px;
 }
 
 h1, h2, h3, ol {
     margin-top: 3px;
     margin-bottom: 3px;
 }
-  
+
 .player-panel {
     flex: 0 0 50%
 }
@@ -53,17 +53,12 @@ h3 {
     font-weight: bold;
 }
 
-@media (max-width: 600px) {
-  .container {
-    justify-content: flex-start;
-  }
-
+@media (max-width: 670px) {
   .selector {
     flex: 0 0 100%;
-    margin-bottom: 20px;
   }
 
-  .player {
-    flex: 0 0 100%;
+  .player-panel {
+    flex: 0 0 100%
   }
 }

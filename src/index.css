@@ -13,21 +13,6 @@ h1, h2, h3, ol {
     margin-bottom: 3px;
 }
 
-.player-panel {
-    flex: 0 0 50%
-}
-
-#player {
-  width: 320px;
-  height: 180px;
-  background-color: black;
-}
-
-.part {
-    padding-top: 3px;
-    padding-bottom: 3px;
-}
-
 .hide, .collapsed {
     display: none;
 }
@@ -37,20 +22,45 @@ h3 {
 }
 
 .arrow {
-  border: 5px solid transparent;
-  border-left: 5px solid black;
+  border: 0.25em solid transparent;
+  border-left: 0.25em solid black;
   display: inline-block;
   vertical-align: middle;
 }
 
 .arrow-expanded {
-  border: 5px solid transparent;
-  border-top: 5px solid black;
+  border: 0.25em solid transparent;
+  border-top: 0.25em solid black;
+}
+
+.player-panel {
+  flex: 0 0 50%
 }
 
 #title {
-    font-size: 1.1em;
-    font-weight: bold;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+#player {
+  width: 320px;
+  height: 180px;
+  background-color: black;
+}
+
+.control {
+  line-height: 1.5em;
+  vertical-align: middle;
+}
+
+#playOrPause {
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.part {
+  padding-top: 3px;
+  padding-bottom: 3px;
 }
 
 @media (max-width: 670px) {

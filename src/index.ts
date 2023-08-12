@@ -8,6 +8,7 @@ const allParts = [vocal, other, piano, guitar, bass, drum];
 
 const songsListDiv = document.getElementById('songsList') as HTMLDivElement;
 const title = document.getElementById('title') as HTMLDivElement;
+const playerLoading = document.getElementById('player_loading') as HTMLDivElement;
 const playOrPause = document.getElementById('playOrPause') as HTMLButtonElement;
 const loading = document.getElementById('loading') as HTMLSpanElement;
 const loadFailed = document.getElementById('loadFailed') as HTMLSpanElement;
@@ -92,6 +93,7 @@ function getVolumeRadio(id: string, volume: number, selected: boolean = false): 
 }
 
 function showLoadState(isLoading: boolean, isFailed: boolean): void {
+  playerLoading.style.display = isLoading ? 'block' : 'none';
   loading.style.display = isLoading ? 'inline' : 'none';
   loadFailed.style.display = isFailed ? 'inline' : 'none';
   currentTime.style.display = isLoading || isFailed ? 'none' : 'inline';

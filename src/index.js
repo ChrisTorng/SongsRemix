@@ -8,6 +8,7 @@ const drum = document.getElementById('drum');
 const allParts = [vocal, other, piano, guitar, bass, drum];
 const songsListDiv = document.getElementById('songsList');
 const title = document.getElementById('title');
+const playerLoading = document.getElementById('player_loading');
 const playOrPause = document.getElementById('playOrPause');
 const loading = document.getElementById('loading');
 const loadFailed = document.getElementById('loadFailed');
@@ -76,6 +77,7 @@ function getVolumeRadio(id, volume, selected = false) {
         /><label id="${id}${volume}-label" for="${id}${volume}" class="part">${volume} </label>`;
 }
 function showLoadState(isLoading, isFailed) {
+    playerLoading.style.display = isLoading ? 'block' : 'none';
     loading.style.display = isLoading ? 'inline' : 'none';
     loadFailed.style.display = isFailed ? 'inline' : 'none';
     currentTime.style.display = isLoading || isFailed ? 'none' : 'inline';

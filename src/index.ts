@@ -1,18 +1,20 @@
+const original = document.getElementById('original') as HTMLAudioElement;
 const vocal = document.getElementById('vocal') as HTMLAudioElement;
 const other = document.getElementById('other') as HTMLAudioElement;
 const piano = document.getElementById('piano') as HTMLAudioElement;
 const guitar = document.getElementById('guitar') as HTMLAudioElement;
 const bass = document.getElementById('bass') as HTMLAudioElement;
 const drum = document.getElementById('drum') as HTMLAudioElement;
-const allParts = [vocal, other, piano, guitar, bass, drum];
+const allParts = [original, vocal, other, piano, guitar, bass, drum];
 
-let vocalWafeform: HTMLImageElement;
-let otherWafeform: HTMLImageElement;
-let pianoWafeform: HTMLImageElement;
-let guitarWafeform: HTMLImageElement;
-let bassWafeform: HTMLImageElement;
-let drumWafeform: HTMLImageElement;
-let allWafeforms: HTMLImageElement[];
+let originalWaveform: HTMLImageElement;
+let vocalWaveform: HTMLImageElement;
+let otherWaveform: HTMLImageElement;
+let pianoWaveform: HTMLImageElement;
+let guitarWaveform: HTMLImageElement;
+let bassWaveform: HTMLImageElement;
+let drumWaveform: HTMLImageElement;
+let allWaveforms: HTMLImageElement[];
 
 const songsListDiv = document.getElementById('songsList') as HTMLDivElement;
 const title = document.getElementById('title') as HTMLDivElement;
@@ -25,6 +27,7 @@ const progress = document.getElementById('progress') as HTMLProgressElement;
 const duration = document.getElementById('duration') as HTMLSpanElement;
 
 const HAVE_ENOUGH_DATA = 4;
+const defaulVolume = 25;
 
 let songsBaseUrl: string;
 let player: YT.Player;
@@ -47,6 +50,7 @@ async function main(): Promise<void> {
 
   setEvents();
 
+  setPartsVolume('original', '原音', 0);
   setPartsVolume('allParts', '全部');
   setPartsVolume('vocal', '人聲');
   setPartsVolume('other', '其他');
@@ -55,16 +59,26 @@ async function main(): Promise<void> {
   setPartsVolume('bass', '貝斯');
   setPartsVolume('drum', '鼓　');
 
-  vocalWafeform = document.getElementById('vocal-waveform') as HTMLImageElement;
-  otherWafeform = document.getElementById('other-waveform') as HTMLImageElement;
-  pianoWafeform = document.getElementById('piano-waveform') as HTMLImageElement;
-  guitarWafeform = document.getElementById('guitar-waveform') as HTMLImageElement;
-  bassWafeform = document.getElementById('bass-waveform') as HTMLImageElement;
-  drumWafeform = document.getElementById('drum-waveform') as HTMLImageElement;
-  allWafeforms = [vocalWafeform, otherWafeform, pianoWafeform, guitarWafeform, bassWafeform, drumWafeform];
-  allWafeforms.forEach(waveform => {
+  setWaveform();
+
+  allParts.forEach(audio => {
+    audio.volume = defaulVolume / 100;
+  });
+
+  setPartEnabled('allParts', true);
+}
+
+function setWaveform() {
+  originalWaveform = document.getElementById('original-waveform') as HTMLImageElement;
+  vocalWaveform = document.getElementById('vocal-waveform') as HTMLImageElement;
+  otherWaveform = document.getElementById('other-waveform') as HTMLImageElement;
+  pianoWaveform = document.getElementById('piano-waveform') as HTMLImageElement;
+  guitarWaveform = document.getElementById('guitar-waveform') as HTMLImageElement;
+  bassWaveform = document.getElementById('bass-waveform') as HTMLImageElement;
+  drumWaveform = document.getElementById('drum-waveform') as HTMLImageElement;
+  allWaveforms = [originalWaveform, vocalWaveform, otherWaveform, pianoWaveform, guitarWaveform, bassWaveform, drumWaveform];
+  allWaveforms.forEach(waveform => {
     waveform.onload = function () {
-      console.log(waveform.id, 'onload');
       waveform.style.display = 'block';
     };
     waveform.onerror = function () {
@@ -72,12 +86,20 @@ async function main(): Promise<void> {
       waveform.style.display = 'none';
     };
   });
+}
 
-  allParts.forEach(audio => {
-    audio.volume = 0.25;
-  });
+function setPartsVolume(id: string, title: string, setVolume: number = defaulVolume): void {
+  const titleHtml: string = `<span id="${id}">${title}</span>`;
+  const radiosHtml: string = getVolumeRadio(id, 0, setVolume === 0) +
+                             getVolumeRadio(id, 25, setVolume === 25) +
+                             getVolumeRadio(id, 50, setVolume === 50) +
+                             getVolumeRadio(id, 75, setVolume === 75) +
+                             getVolumeRadio(id, 100, setVolume === 100);
+  const waveformHtml: string = `<img id="${id}-waveform" class="waveform"/>`;
 
-  setPartEnabled('allParts', true);
+  document.getElementById('parts')!.innerHTML +=
+    `<div class="part">${titleHtml} % ${radiosHtml}${waveformHtml}</div>
+`;
 }
 
 function loadSong(target: HTMLAnchorElement, videoId: string, url?: string): boolean {
@@ -97,25 +119,12 @@ function loadSong(target: HTMLAnchorElement, videoId: string, url?: string): boo
     setPartEnabled(audio.id, false);
   });
 
-  allWafeforms.forEach(waveform => {
+  allWaveforms.forEach(waveform => {
     waveform.src = `${src}/${waveform.id.substring(0, waveform.id.indexOf('-'))}.png`;
+    waveform.style.display = 'none';
     console.log(waveform.src);
   });
   return false;
-}
-
-function setPartsVolume(id: string, title: string): void {
-  const titleHtml: string = `<span id="${id}">${title}</span>`;
-  const radiosHtml: string = getVolumeRadio(id, 0) +
-                             getVolumeRadio(id, 25, true) +
-                             getVolumeRadio(id, 50) +
-                             getVolumeRadio(id, 75) +
-                             getVolumeRadio(id, 100);
-  const waveformHtml: string = `<img id="${id}-waveform" class="waveform"/>`;
-
-  document.getElementById('parts')!.innerHTML +=
-    `<div class="part">${titleHtml} % ${radiosHtml}${waveformHtml}</div>
-`;
 }
 
 function getVolumeRadio(id: string, volume: number, selected: boolean = false): string {
@@ -334,11 +343,51 @@ function setPartEnabled(id: string, enabled: boolean): void {
 
 function setVolume(target: HTMLAudioElement | HTMLAudioElement[], volume: number): void {
   if (Array.isArray(target)) {
+    (document.getElementById(`allParts${volume}`)! as HTMLInputElement).checked = true;
+
     target.forEach(audio => {
+      if (audio === original) {
+        if (volume === 0) {
+          (document.getElementById(`original100`)! as HTMLInputElement).checked = true;
+          original.volume = 1;
+        } else {
+          (document.getElementById(`original0`)! as HTMLInputElement).checked = true;
+          original.volume = 0;
+        }
+        return;
+      }
+
       (document.getElementById(`${audio.id}${volume}`)! as HTMLInputElement).checked = true;
       audio.volume = volume / 100;
     });
     return;
   }
+
+  if (target === original) {
+    if (volume === 0) {
+      setVolume(allParts, defaulVolume);
+      (document.getElementById(`original0`)! as HTMLInputElement).checked = true;
+      original.volume = 0;
+      return;
+    }
+
+    setVolume(allParts, 0);
+    (document.getElementById(`original${volume}`)! as HTMLInputElement).checked = true;
+    original.volume = volume / 100;
+
+    // allParts.forEach(audio => {
+    //   if (audio === original) {
+    //     (document.getElementById(`${audio.id}${volume}`)! as HTMLInputElement).checked = true;
+    //     target.volume = volume / 100;
+    //       return;
+    //   }
+    //   (document.getElementById(`${audio.id}0`)! as HTMLInputElement).checked = true;
+    //   target.volume = 0;
+    // });
+    return;
+  }
+
+  (document.getElementById(`original0`)! as HTMLInputElement).checked = true;
+  original.volume = 0;
   target.volume = volume / 100;
 }

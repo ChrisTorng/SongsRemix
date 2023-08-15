@@ -2,9 +2,9 @@
 
 # [SongsRemix](https://christorng.github.io/SongsRemix/src/)
 
-機動調整歌曲之各分軌聲部音量，還可配合 YouTube 影片同步播放。為練團各樂器及歌者所設計。[示範](https://christorng.github.io/SongsRemix/src/)
+顯示六軌聲部波形圖，機動調整歌曲之各分軌聲部音量，配合 YouTube 影片同步播放。為練團各樂器及歌者所設計。[示範](https://christorng.github.io/SongsRemix/src/)
 
-目前新曲目必須由我加入。增加 [Issues](https://github.com/ChrisTorng/SongsRemix/issues) 通知我。
+目前有 [UP 生命力教會](https://github.com/ChrisTorng/UpLifeSongs) 及 [音控訓練](https://github.com/ChrisTorng/AudioLeadershipSongs) 兩個曲目庫可參考。
 
 歡迎任何貢獻，包括程式、畫面及新曲目。
 

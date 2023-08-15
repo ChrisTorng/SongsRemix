@@ -6,6 +6,13 @@ const guitar = document.getElementById('guitar');
 const bass = document.getElementById('bass');
 const drum = document.getElementById('drum');
 const allParts = [vocal, other, piano, guitar, bass, drum];
+let vocalWafeform;
+let otherWafeform;
+let pianoWafeform;
+let guitarWafeform;
+let bassWafeform;
+let drumWafeform;
+let allWafeforms;
 const songsListDiv = document.getElementById('songsList');
 const title = document.getElementById('title');
 const playerLoading = document.getElementById('player_loading');
@@ -40,6 +47,23 @@ async function main() {
     setPartsVolume('guitar', '吉它');
     setPartsVolume('bass', '貝斯');
     setPartsVolume('drum', '鼓　');
+    vocalWafeform = document.getElementById('vocal-waveform');
+    otherWafeform = document.getElementById('other-waveform');
+    pianoWafeform = document.getElementById('piano-waveform');
+    guitarWafeform = document.getElementById('guitar-waveform');
+    bassWafeform = document.getElementById('bass-waveform');
+    drumWafeform = document.getElementById('drum-waveform');
+    allWafeforms = [vocalWafeform, otherWafeform, pianoWafeform, guitarWafeform, bassWafeform, drumWafeform];
+    allWafeforms.forEach(waveform => {
+        waveform.onload = function () {
+            console.log(waveform.id, 'onload');
+            waveform.style.display = 'block';
+        };
+        waveform.onerror = function () {
+            console.log(waveform.id, 'onerror');
+            waveform.style.display = 'none';
+        };
+    });
     allParts.forEach(audio => {
         audio.volume = 0.25;
     });
@@ -58,6 +82,10 @@ function loadSong(target, videoId, url) {
         audio.load();
         setPartEnabled(audio.id, false);
     });
+    allWafeforms.forEach(waveform => {
+        waveform.src = `${src}/${waveform.id.substring(0, waveform.id.indexOf('-'))}.png`;
+        console.log(waveform.src);
+    });
     return false;
 }
 function setPartsVolume(id, title) {
@@ -67,14 +95,16 @@ function setPartsVolume(id, title) {
         getVolumeRadio(id, 50) +
         getVolumeRadio(id, 75) +
         getVolumeRadio(id, 100);
+    const waveformHtml = `<img id="${id}-waveform" class="waveform"/>`;
     document.getElementById('parts').innerHTML +=
-        `<div class="part">${titleHtml} % ${radiosHtml}</div>
+        `<div class="part">${titleHtml} % ${radiosHtml}${waveformHtml}</div>
 `;
 }
 function getVolumeRadio(id, volume, selected = false) {
     return `<input type="radio" name="${id}-radio" id="${id}${volume}" disabled="disabled"
-        onclick="setVolume(${id}, ${volume})" ${selected ? 'checked' : ''}
-        /><label id="${id}${volume}-label" for="${id}${volume}" class="part">${volume} </label>`;
+onclick="setVolume(${id}, ${volume})" ${selected ? 'checked' : ''}
+/><label id="${id}${volume}-label" for="${id}${volume}" class="part">${volume} </label>
+`;
 }
 function showLoadState(isLoading, isFailed) {
     playerLoading.style.display = isLoading ? 'block' : 'none';

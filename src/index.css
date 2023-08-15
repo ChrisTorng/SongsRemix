@@ -76,6 +76,11 @@ h3 {
   padding-bottom: 3px;
 }
 
+.waveform {
+  width: 100%;
+  display: none;
+}
+
 @media (max-width: 670px) {
   .selector {
     flex: 0 0 100%;

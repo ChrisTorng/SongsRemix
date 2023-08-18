@@ -25,7 +25,7 @@ const currentTime = document.getElementById('currentTime');
 const progress = document.getElementById('progress');
 const duration = document.getElementById('duration');
 const HAVE_ENOUGH_DATA = 4;
-const defaulVolume = 25;
+const defaultVolume = 25;
 let songsBaseUrl;
 let player;
 main();
@@ -53,8 +53,9 @@ async function main() {
     setPartsVolume('drum', '鼓　');
     setWaveform();
     allParts.forEach(audio => {
-        audio.volume = defaulVolume / 100;
+        audio.volume = defaultVolume / 100;
     });
+    original.volume = 0;
     setPartEnabled('allParts', true);
 }
 function setWaveform() {
@@ -76,7 +77,7 @@ function setWaveform() {
         };
     });
 }
-function setPartsVolume(id, title, setVolume = defaulVolume) {
+function setPartsVolume(id, title, setVolume = defaultVolume) {
     const titleHtml = `<span id="${id}">${title}</span>`;
     const radiosHtml = getVolumeRadio(id, 0, setVolume === 0) +
         getVolumeRadio(id, 25, setVolume === 25) +
@@ -309,8 +310,8 @@ function setVolume(target, volume) {
         target.forEach(audio => {
             if (audio === original) {
                 if (volume === 0) {
-                    document.getElementById(`original100`).checked = true;
-                    original.volume = 1;
+                    document.getElementById(`original${defaultVolume}`).checked = true;
+                    original.volume = defaultVolume / 100;
                 }
                 else {
                     document.getElementById(`original0`).checked = true;
@@ -325,7 +326,7 @@ function setVolume(target, volume) {
     }
     if (target === original) {
         if (volume === 0) {
-            setVolume(allParts, defaulVolume);
+            setVolume(allParts, defaultVolume);
             document.getElementById(`original0`).checked = true;
             original.volume = 0;
             return;
@@ -333,15 +334,6 @@ function setVolume(target, volume) {
         setVolume(allParts, 0);
         document.getElementById(`original${volume}`).checked = true;
         original.volume = volume / 100;
-        // allParts.forEach(audio => {
-        //   if (audio === original) {
-        //     (document.getElementById(`${audio.id}${volume}`)! as HTMLInputElement).checked = true;
-        //     target.volume = volume / 100;
-        //       return;
-        //   }
-        //   (document.getElementById(`${audio.id}0`)! as HTMLInputElement).checked = true;
-        //   target.volume = 0;
-        // });
         return;
     }
     document.getElementById(`original0`).checked = true;

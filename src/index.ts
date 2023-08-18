@@ -27,7 +27,7 @@ const progress = document.getElementById('progress') as HTMLProgressElement;
 const duration = document.getElementById('duration') as HTMLSpanElement;
 
 const HAVE_ENOUGH_DATA = 4;
-const defaulVolume = 25;
+const defaultVolume = 25;
 
 let songsBaseUrl: string;
 let player: YT.Player;
@@ -62,8 +62,9 @@ async function main(): Promise<void> {
   setWaveform();
 
   allParts.forEach(audio => {
-    audio.volume = defaulVolume / 100;
+    audio.volume = defaultVolume / 100;
   });
+  original.volume = 0;
 
   setPartEnabled('allParts', true);
 }
@@ -88,7 +89,7 @@ function setWaveform() {
   });
 }
 
-function setPartsVolume(id: string, title: string, setVolume: number = defaulVolume): void {
+function setPartsVolume(id: string, title: string, setVolume: number = defaultVolume): void {
   const titleHtml: string = `<span id="${id}">${title}</span>`;
   const radiosHtml: string = getVolumeRadio(id, 0, setVolume === 0) +
                              getVolumeRadio(id, 25, setVolume === 25) +
@@ -348,8 +349,8 @@ function setVolume(target: HTMLAudioElement | HTMLAudioElement[], volume: number
     target.forEach(audio => {
       if (audio === original) {
         if (volume === 0) {
-          (document.getElementById(`original100`)! as HTMLInputElement).checked = true;
-          original.volume = 1;
+          (document.getElementById(`original${defaultVolume}`)! as HTMLInputElement).checked = true;
+          original.volume = defaultVolume / 100;
         } else {
           (document.getElementById(`original0`)! as HTMLInputElement).checked = true;
           original.volume = 0;
@@ -365,7 +366,7 @@ function setVolume(target: HTMLAudioElement | HTMLAudioElement[], volume: number
 
   if (target === original) {
     if (volume === 0) {
-      setVolume(allParts, defaulVolume);
+      setVolume(allParts, defaultVolume);
       (document.getElementById(`original0`)! as HTMLInputElement).checked = true;
       original.volume = 0;
       return;
@@ -375,15 +376,6 @@ function setVolume(target: HTMLAudioElement | HTMLAudioElement[], volume: number
     (document.getElementById(`original${volume}`)! as HTMLInputElement).checked = true;
     original.volume = volume / 100;
 
-    // allParts.forEach(audio => {
-    //   if (audio === original) {
-    //     (document.getElementById(`${audio.id}${volume}`)! as HTMLInputElement).checked = true;
-    //     target.volume = volume / 100;
-    //       return;
-    //   }
-    //   (document.getElementById(`${audio.id}0`)! as HTMLInputElement).checked = true;
-    //   target.volume = 0;
-    // });
     return;
   }
 

@@ -12,9 +12,10 @@
 ### 之後每一次加曲目
 
 1. 取得原始音檔
-2. 製作分軌及波形圖
-3. 加入曲目資料
-4. 上傳網路空間
+2. 製作分軌
+3. 製作波形圖
+4. 加入曲目資料
+5. 上傳網路空間
 
 以下分段詳細說明。
 
@@ -32,7 +33,19 @@
 
 ### 取得原始音檔
 
-### 製作分軌及波形圖
+安裝 [youtube_dl](https://oleksis.github.io/youtube-dl-gui/)
+
+輸入 YouTube 網址 - 選擇輸出資料夾 - 選擇 mp3 - Add - 右下角 Start
+
+### 製作分軌
+
+安裝 [Ultimate Voice Remover](https://github.com/anjok07/ultimatevocalremovergui)
+
+
+
+### 製作波形圖
+
+
 
 ### 加入曲目資料
 

@@ -190,6 +190,7 @@ function onPlayerStateChange(event: { data: number }) {
   switch (event.data) {
     case YT.PlayerState.UNSTARTED:
       console.log('onPlayerStateChange UNSTARTED');
+      player.setVolume(1);
       break;
     case YT.PlayerState.BUFFERING:
       console.log('onPlayerStateChange BUFFERING');

@@ -5,11 +5,13 @@ type Song = {
 
 type Group = {
   subTitle: string;
+  subTitleUrl: string;
   songs: Song[];
 }
 
 type SongsList = {
   title: string;
+  titleUrl: string;
   groups: Group[];
 }
 
@@ -56,10 +58,14 @@ async function fetchSongsList(url: string): Promise<SongsList> {
 
 function generateHTML(songsList: SongsList): string {
   let isFirst = true;
-  let html = `<h2>${songsList.title}</h2>`;
+  let html = `<h2>${generateUrl(songsList.title, songsList.titleUrl)}</h2>`;
   for (const group of songsList.groups) {
-    html += `<h3 onclick="toggleCollapsed(this);">
-<span class="arrow ${isFirst ? 'arrow-expanded' : ''}"></span> ${group.subTitle}</h3>`;
+    html += `<h3>
+<div onclick="toggleCollapsed(this.parentNode);">
+<span class="arrow ${isFirst ? 'arrow-expanded' : ''}"></span>
+${group.subTitle}</div>
+${group.subTitleUrl ? `<a href="${group.subTitleUrl}" target="_blank">現場</a>` : ''}
+</h3>`;
     html += `<ol ${isFirst ? '' : 'class="collapsed"'}>`;
     for (const song of group.songs) {
       html += `<li><a href="#title" onclick="loadSong(this, '${song.youtubeId}')">${song.name}</a></li>`;
@@ -70,8 +76,15 @@ function generateHTML(songsList: SongsList): string {
   return html;
 }
 
+function generateUrl(title: string, url?: string): string {
+  if (!url) {
+    return title;
+  }
+  return `<a href="${url ?? ''}" target="_blank">${title}</a>`
+}
+
 function toggleCollapsed(target: HTMLHeadingElement): void {
-  let arrow = target.firstElementChild! as HTMLElement;
+  let arrow = target.firstElementChild!.firstElementChild! as HTMLElement;
   arrow.classList.toggle('arrow-expanded');
   let next = target.nextElementSibling!;
   next.classList.toggle('collapsed');

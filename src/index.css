@@ -17,8 +17,9 @@ h1, h2, h3, ol {
     display: none;
 }
 
-h3 {
+h3 div {
   cursor: pointer;
+  display: inline-block;
 }
 
 .arrow {

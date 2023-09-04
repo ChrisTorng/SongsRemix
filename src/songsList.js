@@ -40,10 +40,14 @@ async function fetchSongsList(url) {
 }
 function generateHTML(songsList) {
     let isFirst = true;
-    let html = `<h2>${songsList.title}</h2>`;
+    let html = `<h2>${generateUrl(songsList.title, songsList.titleUrl)}</h2>`;
     for (const group of songsList.groups) {
-        html += `<h3 onclick="toggleCollapsed(this);">
-<span class="arrow ${isFirst ? 'arrow-expanded' : ''}"></span> ${group.subTitle}</h3>`;
+        html += `<h3>
+<div onclick="toggleCollapsed(this.parentNode);">
+<span class="arrow ${isFirst ? 'arrow-expanded' : ''}"></span>
+${group.subTitle}</div>
+${group.subTitleUrl ? `<a href="${group.subTitleUrl}" target="_blank">現場</a>` : ''}
+</h3>`;
         html += `<ol ${isFirst ? '' : 'class="collapsed"'}>`;
         for (const song of group.songs) {
             html += `<li><a href="#title" onclick="loadSong(this, '${song.youtubeId}')">${song.name}</a></li>`;
@@ -53,8 +57,14 @@ function generateHTML(songsList) {
     }
     return html;
 }
+function generateUrl(title, url) {
+    if (!url) {
+        return title;
+    }
+    return `<a href="${url ?? ''}" target="_blank">${title}</a>`;
+}
 function toggleCollapsed(target) {
-    let arrow = target.firstElementChild;
+    let arrow = target.firstElementChild.firstElementChild;
     arrow.classList.toggle('arrow-expanded');
     let next = target.nextElementSibling;
     next.classList.toggle('collapsed');

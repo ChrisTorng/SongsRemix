@@ -21,12 +21,22 @@ async function loadSongsList(songsBaseUrl) {
     catch (e) {
         throw `載入曲目清單失敗: ${e}`;
     }
+    setTitle(songsListJson.title, songsListJson.titleUrl);
     try {
         return generateHTML(songsListJson);
     }
     catch (e) {
         throw `讀取曲目清單失敗: ${e}`;
     }
+}
+function setTitle(title, url) {
+    const h1 = document.getElementsByTagName('h1')[0];
+    h1.innerHTML = `${generateUrl(title, url)} - ${h1.innerHTML}`;
+    new URL(songsBaseUrl).origin;
+    window.parent.postMessage({
+        type: 'SET_TITLE',
+        title: title
+    }, new URL(songsBaseUrl).origin);
 }
 async function fetchSongsList(url) {
     const response = await fetch(url, {
@@ -40,7 +50,7 @@ async function fetchSongsList(url) {
 }
 function generateHTML(songsList) {
     let isFirst = true;
-    let html = `<h2>${generateUrl(songsList.title, songsList.titleUrl)}</h2>`;
+    let html = '';
     for (const group of songsList.groups) {
         html += `<h3>
 <div onclick="toggleCollapsed(this.parentNode);">

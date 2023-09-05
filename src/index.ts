@@ -5,7 +5,7 @@ const piano = document.getElementById('piano') as HTMLAudioElement;
 const guitar = document.getElementById('guitar') as HTMLAudioElement;
 const bass = document.getElementById('bass') as HTMLAudioElement;
 const drum = document.getElementById('drum') as HTMLAudioElement;
-const allParts = [original, vocal, other, piano, guitar, bass, drum];
+const allParts = [vocal, other, piano, guitar, bass, drum, original];
 
 let originalWaveform: HTMLImageElement;
 let vocalWaveform: HTMLImageElement;
@@ -57,7 +57,7 @@ async function main(): Promise<void> {
   setPartsVolume('piano', '鋼琴');
   setPartsVolume('guitar', '吉它');
   setPartsVolume('bass', '貝斯');
-  setPartsVolume('drum', '鼓　');
+  setPartsVolume('drum', '鼓組');
 
   setWaveform();
 

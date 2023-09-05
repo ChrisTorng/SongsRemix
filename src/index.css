@@ -13,6 +13,10 @@ h1, h2, h3, ol {
     margin-bottom: 3px;
 }
 
+.subtitle {
+    font-size: 0.8em;
+}
+
 .hide, .collapsed {
     display: none;
 }

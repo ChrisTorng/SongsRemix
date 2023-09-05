@@ -6,7 +6,7 @@ const piano = document.getElementById('piano');
 const guitar = document.getElementById('guitar');
 const bass = document.getElementById('bass');
 const drum = document.getElementById('drum');
-const allParts = [original, vocal, other, piano, guitar, bass, drum];
+const allParts = [vocal, other, piano, guitar, bass, drum, original];
 let originalWaveform;
 let vocalWaveform;
 let otherWaveform;
@@ -50,7 +50,7 @@ async function main() {
     setPartsVolume('piano', '鋼琴');
     setPartsVolume('guitar', '吉它');
     setPartsVolume('bass', '貝斯');
-    setPartsVolume('drum', '鼓　');
+    setPartsVolume('drum', '鼓組');
     setWaveform();
     allParts.forEach(audio => {
         audio.volume = defaultVolume / 100;

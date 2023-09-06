@@ -5,7 +5,8 @@ function getSongsBaseUrl() {
     if (songsListBase) {
         return songsListBase;
     }
-    if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+    if (window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1") {
         location.href = '?songsList=//localhost:3001/';
     }
     else {
@@ -23,20 +24,11 @@ async function loadSongsList(songsBaseUrl) {
     }
     setTitle(songsListJson.title, songsListJson.titleUrl);
     try {
-        return generateHTML(songsListJson);
+        return generateHTML(songsListJson.groups);
     }
     catch (e) {
         throw `讀取曲目清單失敗: ${e}`;
     }
-}
-function setTitle(title, url) {
-    const h1 = document.getElementsByTagName('h1')[0];
-    h1.innerHTML = `${generateUrl(title, url)} - ${h1.innerHTML}`;
-    new URL(songsBaseUrl).origin;
-    window.parent.postMessage({
-        type: 'SET_TITLE',
-        title: title
-    }, new URL(songsBaseUrl).origin);
 }
 async function fetchSongsList(url) {
     const response = await fetch(url, {
@@ -48,10 +40,20 @@ async function fetchSongsList(url) {
     }
     return await response.json();
 }
-function generateHTML(songsList) {
+function setTitle(title, url) {
+    const h1 = document.getElementsByTagName('h1')[0];
+    h1.innerHTML = `${generateUrl(title, url)} - ${h1.innerHTML}`;
+    new URL(songsBaseUrl).origin;
+    // 更新父視窗之標題
+    window.parent.postMessage({
+        type: 'SET_TITLE',
+        title: title
+    }, new URL(songsBaseUrl).origin);
+}
+function generateHTML(groups) {
     let isFirst = true;
     let html = '';
-    for (const group of songsList.groups) {
+    for (const group of groups) {
         html += `<h3>
 <div onclick="toggleCollapsed(this.parentNode);">
 <span class="arrow ${isFirst ? 'arrow-expanded' : ''}"></span>

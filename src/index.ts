@@ -115,7 +115,7 @@ function loadSong(target: HTMLAnchorElement, videoId: string, url?: string): boo
   showLoadState(true, false);
   progress.value = 0;
 
-  player.pauseVideo();
+  player.stopVideo();
   player.cueVideoById(videoId);
 
   allParts.forEach(audio => {
@@ -232,6 +232,7 @@ function onPlayerStateChange(event: { data: number }) {
         audio.pause();
       });
       playOrPause.innerHTML = '▶';
+      syncTime(player.getCurrentTime());
       break;
 
     case YT.PlayerState.ENDED:
@@ -340,19 +341,28 @@ function setEvents(): void {
       progress.value = vocal.currentTime / vocal.duration * 100;
     }
 
-    // console.log('player', player.getCurrentTime(), getTime(player.getCurrentTime()));
-    // allParts.forEach(audio => {
-    //   console.log(audio.id, audio.currentTime, getTime(audio.currentTime));
-    // });
+    //traceTiming();
   };
 
   progress.oninput = function () {
     const time = vocal.duration * progress.value / 100;
-    player.seekTo(time, true);
-    allParts.forEach(audio => {
-      audio.currentTime = time;
-    });
+    syncTime(time);
   };
+}
+
+function syncTime(time: number) {
+  player.seekTo(time, true);
+  allParts.forEach(audio => {
+    audio.currentTime = time;
+  });
+}
+
+function traceTiming(): void {
+  const playerTime = player.getCurrentTime();
+  console.log('player', playerTime, getTime(playerTime));
+  allParts.forEach(audio => {
+    console.log(audio.id, audio.currentTime - playerTime);
+  });
 }
 
 function onEnded(): any {

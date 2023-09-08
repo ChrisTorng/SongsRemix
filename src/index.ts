@@ -22,12 +22,16 @@ const playerLoading = document.getElementById('player_loading') as HTMLDivElemen
 const playOrPause = document.getElementById('playOrPause') as HTMLButtonElement;
 const loading = document.getElementById('loading') as HTMLSpanElement;
 const loadFailed = document.getElementById('loadFailed') as HTMLSpanElement;
+const mobileBeforePlayMessage = document.getElementById('mobileBeforePlayMessage') as HTMLDivElement;
 const currentTime = document.getElementById('currentTime') as HTMLSpanElement;
 const progress = document.getElementById('progress') as HTMLProgressElement;
 const duration = document.getElementById('duration') as HTMLSpanElement;
 
 const HAVE_ENOUGH_DATA = 4;
 const defaultVolume = 25;
+
+const isMobile = /Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent);
+let mobilePlayed = false;
 
 let songsBaseUrl: string;
 let player: YT.Player;
@@ -139,12 +143,18 @@ function showLoadState(isLoading: boolean, isFailed: boolean): void {
   playerLoading.style.display = isLoading ? 'block' : 'none';
   loading.style.display = isLoading ? 'inline' : 'none';
   loadFailed.style.display = isFailed ? 'inline' : 'none';
+  mobileBeforePlayMessage.style.display =
+    (!isLoading && !isFailed) && isMobile && !mobilePlayed ? 'block' : 'none';
   currentTime.style.display = isLoading || isFailed ? 'none' : 'inline';
   progress.style.display = isLoading || isFailed ? 'none' : 'inline';
   duration.style.display = isLoading || isFailed ? 'none' : 'inline';
 }
 
 function setPlayOrPauseEnabled(enabled: boolean): void {
+  if (isMobile && !mobilePlayed) {
+    enabled = false;
+  }
+
   playOrPause.disabled = !enabled;
   if (!enabled) {
     playOrPause.innerHTML = '▶';
@@ -192,13 +202,16 @@ function onPlayerStateChange(event: { data: number }) {
       console.log('onPlayerStateChange UNSTARTED');
       player.setVolume(1);
       break;
+
     case YT.PlayerState.BUFFERING:
       console.log('onPlayerStateChange BUFFERING');
       break;
+
     case YT.PlayerState.CUED:
       console.log('onPlayerStateChange CUED');
       whenAllPartsReadySetPlay();
       break;
+
     case YT.PlayerState.PLAYING:
       console.log('onPlayerStateChange PLAYING');
       allParts.forEach(audio => {
@@ -206,13 +219,21 @@ function onPlayerStateChange(event: { data: number }) {
           audio.play();
         }
       });
+
+      mobilePlayed = true;
+      mobileBeforePlayMessage.style.display = 'none';
+      setPlayOrPauseEnabled(true);
       playOrPause.innerHTML = '&#10074;&#10074;';
       break;
+
     case YT.PlayerState.PAUSED:
       console.log('onPlayerStateChange PAUSED');
       allParts.forEach(audio => {
         audio.pause();
       });
+      playOrPause.innerHTML = '▶';
+      break;
+
     case YT.PlayerState.ENDED:
       console.log('onPlayerStateChange ENDED');
       break;
@@ -245,6 +266,11 @@ function showSongTotalTime(): void {
   const vocalTime = vocal.duration;
   const time = getTime(vocalTime);
   document.getElementById('duration')!.innerHTML = time;
+
+  // console.log('player', player.getDuration(), getTime(player.getDuration()));
+  // allParts.forEach(audio => {
+  //   console.log(audio.id, audio.duration, getTime(audio.duration));
+  // });
 }
 
 function getTime(time: number): string {
@@ -313,6 +339,11 @@ function setEvents(): void {
     } else {
       progress.value = vocal.currentTime / vocal.duration * 100;
     }
+
+    // console.log('player', player.getCurrentTime(), getTime(player.getCurrentTime()));
+    // allParts.forEach(audio => {
+    //   console.log(audio.id, audio.currentTime, getTime(audio.currentTime));
+    // });
   };
 
   progress.oninput = function () {

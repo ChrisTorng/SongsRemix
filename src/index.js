@@ -21,11 +21,14 @@ const playerLoading = document.getElementById('player_loading');
 const playOrPause = document.getElementById('playOrPause');
 const loading = document.getElementById('loading');
 const loadFailed = document.getElementById('loadFailed');
+const mobileBeforePlayMessage = document.getElementById('mobileBeforePlayMessage');
 const currentTime = document.getElementById('currentTime');
 const progress = document.getElementById('progress');
 const duration = document.getElementById('duration');
 const HAVE_ENOUGH_DATA = 4;
 const defaultVolume = 25;
+const isMobile = /Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent);
+let mobilePlayed = false;
 let songsBaseUrl;
 let player;
 main();
@@ -119,11 +122,16 @@ function showLoadState(isLoading, isFailed) {
     playerLoading.style.display = isLoading ? 'block' : 'none';
     loading.style.display = isLoading ? 'inline' : 'none';
     loadFailed.style.display = isFailed ? 'inline' : 'none';
+    mobileBeforePlayMessage.style.display =
+        (!isLoading && !isFailed) && isMobile && !mobilePlayed ? 'block' : 'none';
     currentTime.style.display = isLoading || isFailed ? 'none' : 'inline';
     progress.style.display = isLoading || isFailed ? 'none' : 'inline';
     duration.style.display = isLoading || isFailed ? 'none' : 'inline';
 }
 function setPlayOrPauseEnabled(enabled) {
+    if (isMobile && !mobilePlayed) {
+        enabled = false;
+    }
     playOrPause.disabled = !enabled;
     if (!enabled) {
         playOrPause.innerHTML = '▶';
@@ -182,6 +190,9 @@ function onPlayerStateChange(event) {
                     audio.play();
                 }
             });
+            mobilePlayed = true;
+            mobileBeforePlayMessage.style.display = 'none';
+            setPlayOrPauseEnabled(true);
             playOrPause.innerHTML = '&#10074;&#10074;';
             break;
         case YT.PlayerState.PAUSED:
@@ -189,6 +200,8 @@ function onPlayerStateChange(event) {
             allParts.forEach(audio => {
                 audio.pause();
             });
+            playOrPause.innerHTML = '▶';
+            break;
         case YT.PlayerState.ENDED:
             console.log('onPlayerStateChange ENDED');
             break;
@@ -216,6 +229,10 @@ function showSongTotalTime() {
     const vocalTime = vocal.duration;
     const time = getTime(vocalTime);
     document.getElementById('duration').innerHTML = time;
+    // console.log('player', player.getDuration(), getTime(player.getDuration()));
+    // allParts.forEach(audio => {
+    //   console.log(audio.id, audio.duration, getTime(audio.duration));
+    // });
 }
 function getTime(time) {
     const hours = Math.floor(time / 3600);
@@ -278,6 +295,10 @@ function setEvents() {
         else {
             progress.value = vocal.currentTime / vocal.duration * 100;
         }
+        // console.log('player', player.getCurrentTime(), getTime(player.getCurrentTime()));
+        // allParts.forEach(audio => {
+        //   console.log(audio.id, audio.currentTime, getTime(audio.currentTime));
+        // });
     };
     progress.oninput = function () {
         const time = vocal.duration * progress.value / 100;

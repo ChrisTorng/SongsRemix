@@ -24,7 +24,7 @@ function getSongsBaseUrl(): string | null {
 
   if (window.location.hostname === "localhost" ||
       window.location.hostname === "127.0.0.1") {
-    location.href = '?songsList=//localhost:3001/';
+    location.href = '?songsList=http://localhost:3001/';
   } else {
     location.href = '?songsList=../../SongsRemixDemo/';
   }

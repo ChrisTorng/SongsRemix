@@ -20,7 +20,7 @@
 
 * 完成自行製作曲目庫教學 Windows 版
 * Windows/Mac/Linux 通用之自行製作曲目庫教學
-* 若不開發僅製作曲目庫，刪除 Node.js 之需求
+* 若不開發僅製作曲目庫，刪除安裝 Node.js 之需求
 * 另開 YouTube 網站圖示
 * 連結開啟曲目之譜
 * 自由指定目標音檔網址
@@ -36,6 +36,7 @@
 * 記憶分軌音量設定
 * 鎖定喜好分軌項目不受「全部」切換影響
 * 動態指定分軌項目 (非固定為六軌)
+* 多國語系支援
 
 ## 本機執行預先安裝
 ```
@@ -53,7 +54,6 @@ npx http-server -p 3000 -c-1
 
 ## 開發
 ```
-cd src
 tsc -w
 ```
 
@@ -61,7 +61,6 @@ tsc -w
 
 Live remix splitted song's vocal and instruments. Designed for pratices. [Live demo](https://christorng.github.io/SongsRemix/src/).
 
-Currently new songs needs to be added by me. Add [Issues](https://github.com/ChrisTorng/SongsRemix/issues) to notify me.
 
 Welcome any contribution, including coding, layout and new songs.
 
@@ -81,6 +80,5 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Development
 ```
-cd src
 tsc -w
 ```

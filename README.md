@@ -2,8 +2,8 @@
 
 # [SongsRemix](https://christorng.github.io/SongsRemix/src/)
 
-顯示六軌聲部波形圖，可機動調整歌曲之各分軌聲部音量，配合 YouTube 影片同步播放。為練團前各樂手及歌手需要仔細聽自己的 樂器/聲部 學習，亦可配合自己練習所設計。
-
+事前製作區分六軌 (人聲、鼓組、貝斯、吉它、鋼琴、其他) 之音檔及波形圖，藉由此工具可以分享給大家。大家可以機動調整各軌之音量，與 YouTube 畫面一起播放。是設計給練團前各樂手及歌手需要仔細聽自己的 樂器/聲部 來做學習，亦可配合自我練習之用。
+-
 目前有下列曲目庫:
 * [範例曲目庫](https://christorng.github.io/SongsRemixDemo/) ([原始碼](https://github.com/ChrisTorng/SongsRemixDemo))
 * [UP 生命力教會](https://christorng.github.io/UpLifeSongs/) ([原始碼](https://github.com/ChrisTorng/UpLifeSongs))
@@ -14,13 +14,13 @@
 
 ## 自行製作曲目庫
 
-詳細流程請見[如何自行製作曲目庫](https://github.com/ChrisTorng/SongsRemixDemo/blob/main/HowTo_zht.md)。
+詳細流程請見 範例曲目庫 中的 [如何自行製作曲目庫](https://github.com/ChrisTorng/SongsRemixDemo/blob/main/HowTo_zht.md)。另 [範例曲目庫](https://github.com/ChrisTorng/SongsRemixDemo) 功能會保持在最新釋出版本，其他曲目庫版本不一定有跟上最新版。
 
 ## 未來計畫
 
-* 完成自行製作曲目庫教學 Windows 版
 * Windows/Mac/Linux 通用之自行製作曲目庫教學
 * 若不開發僅製作曲目庫，刪除安裝 Node.js 之需求
+* 先製作歌曲清單，後續自動化執行下載音檔、分軌及波形圖
 * 另開 YouTube 網站圖示
 * 連結開啟曲目之譜
 * 自由指定目標音檔網址

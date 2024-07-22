@@ -43,7 +43,6 @@ async function fetchSongsList(url) {
 function setTitle(title, url) {
     const h1 = document.getElementsByTagName('h1')[0];
     h1.innerHTML = `${generateUrl(title, url)} - ${h1.innerHTML}`;
-    new URL(songsBaseUrl).origin;
     // 更新父視窗之標題
     window.parent.postMessage({
         type: 'SET_TITLE',

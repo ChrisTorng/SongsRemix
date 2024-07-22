@@ -17,7 +17,8 @@ let drumWaveform: HTMLImageElement;
 let allWaveforms: HTMLImageElement[];
 
 const songsListDiv = document.getElementById('songsList') as HTMLDivElement;
-const title = document.getElementById('title') as HTMLDivElement;
+const currentSongTitle = document.getElementById('current-song-title') as HTMLSpanElement;
+const youtubeLink = document.getElementById('youtube-link') as HTMLAnchorElement;
 const playerLoading = document.getElementById('player_loading') as HTMLDivElement;
 const playOrPause = document.getElementById('playOrPause') as HTMLButtonElement;
 const loading = document.getElementById('loading') as HTMLSpanElement;
@@ -110,7 +111,8 @@ function setPartsVolume(id: string, title: string, setVolume: number = defaultVo
 function loadSong(target: HTMLAnchorElement, videoId: string, url?: string): boolean {
   let src = url ?? `${songsBaseUrl}/${target.innerText}`;
 
-  title.innerText = target.innerText;
+  currentSongTitle.innerText = target.innerText;
+  youtubeLink.href = `https://www.youtube.com/watch?v=${videoId}`;
   setPlayOrPauseEnabled(false);
   showLoadState(true, false);
   progress.value = 0;
@@ -166,7 +168,8 @@ function onYouTubeIframeAPIReady() {
   player = new YT.Player('player', {
     playerVars: {
       playsinline: 1,
-      controls: 0
+      controls: 0,  // 停用預設控制面板
+      //fs: 1  // 啟用全螢幕按鈕
     },
     events: {
       onReady: onPlayerReady,
@@ -192,7 +195,7 @@ function onPlayerReady(event: { target: YT.Player }) {
   console.log('onPlayerReady');
   player.setVolume(1);
   songsListDiv.style.display = 'block';
-  title.innerText = '請選擇曲目';
+  currentSongTitle.innerText = '請選擇曲目';
   location.hash = '#head';
 }
 

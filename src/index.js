@@ -16,7 +16,8 @@ let bassWaveform;
 let drumWaveform;
 let allWaveforms;
 const songsListDiv = document.getElementById('songsList');
-const title = document.getElementById('title');
+const currentSongTitle = document.getElementById('current-song-title');
+const youtubeLink = document.getElementById('youtube-link');
 const playerLoading = document.getElementById('player_loading');
 const playOrPause = document.getElementById('playOrPause');
 const loading = document.getElementById('loading');
@@ -94,7 +95,8 @@ function setPartsVolume(id, title, setVolume = defaultVolume) {
 }
 function loadSong(target, videoId, url) {
     let src = url ?? `${songsBaseUrl}/${target.innerText}`;
-    title.innerText = target.innerText;
+    currentSongTitle.innerText = target.innerText;
+    youtubeLink.href = `https://www.youtube.com/watch?v=${videoId}`;
     setPlayOrPauseEnabled(false);
     showLoadState(true, false);
     progress.value = 0;
@@ -142,7 +144,8 @@ function onYouTubeIframeAPIReady() {
     player = new YT.Player('player', {
         playerVars: {
             playsinline: 1,
-            controls: 0
+            controls: 0, // 停用預設控制面板
+            //fs: 1  // 啟用全螢幕按鈕
         },
         events: {
             onReady: onPlayerReady,
@@ -167,7 +170,7 @@ function onPlayerReady(event) {
     console.log('onPlayerReady');
     player.setVolume(1);
     songsListDiv.style.display = 'block';
-    title.innerText = '請選擇曲目';
+    currentSongTitle.innerText = '請選擇曲目';
     location.hash = '#head';
 }
 function onPlayerStateChange(event) {

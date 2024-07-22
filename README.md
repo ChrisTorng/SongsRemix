@@ -55,6 +55,7 @@ npx http-server -p 3000 -c-1
 
 ## 開發
 ```
+npm install
 tsc -w
 ```
 
@@ -81,5 +82,6 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Development
 ```
+npm install
 tsc -w
 ```

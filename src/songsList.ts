@@ -44,7 +44,7 @@ async function loadSongsList(songsBaseUrl: string): Promise<string> {
   try {
     return generateHTML(songsListJson.groups);
   } catch (e) {
-    throw`讀取曲目清單失敗: ${e}`;
+    throw `讀取曲目清單失敗: ${e}`;
   }
 }
 
@@ -62,10 +62,9 @@ async function fetchSongsList(url: string): Promise<SongsList> {
 function setTitle(title: string, url: string): void {
   const h1 = document.getElementsByTagName('h1')[0];
   h1.innerHTML = `${generateUrl(title, url)} - ${h1.innerHTML}`;
-    new URL(songsBaseUrl).origin;
 
-    // 更新父視窗之標題
-    window.parent.postMessage({
+  // 更新父視窗之標題
+  window.parent.postMessage({
     type: 'SET_TITLE',
     title: title
   }, new URL(songsBaseUrl).origin);

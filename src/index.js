@@ -82,7 +82,7 @@ function setWaveform() {
     });
 }
 function setPartsVolume(id, title, setVolume = defaultVolume) {
-    const titleHtml = `<span id="${id}">${title}</span>`;
+    const titleHtml = `<span id="${id}-title" class="disabled">${title} %</span>`;
     const radiosHtml = getVolumeRadio(id, 0, setVolume === 0) +
         getVolumeRadio(id, 25, setVolume === 25) +
         getVolumeRadio(id, 50, setVolume === 50) +
@@ -90,7 +90,7 @@ function setPartsVolume(id, title, setVolume = defaultVolume) {
         getVolumeRadio(id, 100, setVolume === 100);
     const waveformHtml = `<img id="${id}-waveform" class="waveform"/>`;
     document.getElementById('parts').innerHTML +=
-        `<div class="part">${titleHtml} % ${radiosHtml}${waveformHtml}</div>
+        `<div class="part">${titleHtml} ${radiosHtml}${waveformHtml}</div>
 `;
 }
 function loadSong(target, videoId, url) {
@@ -117,7 +117,7 @@ function loadSong(target, videoId, url) {
 function getVolumeRadio(id, volume, selected = false) {
     return `<input type="radio" name="${id}-radio" id="${id}${volume}" disabled="disabled"
 onclick="setVolume(${id}, ${volume})" ${selected ? 'checked' : ''}
-/><label id="${id}${volume}-label" for="${id}${volume}" class="part">${volume} </label>
+/><label id="${id}${volume}-label" for="${id}${volume}" class="part disabled">${volume} </label>
 `;
 }
 function showLoadState(isLoading, isFailed) {
@@ -331,11 +331,24 @@ function onEnded() {
 }
 ;
 function setPartEnabled(id, enabled) {
-    document.getElementById(`${id}0`).disabled = !enabled;
-    document.getElementById(`${id}25`).disabled = !enabled;
-    document.getElementById(`${id}50`).disabled = !enabled;
-    document.getElementById(`${id}75`).disabled = !enabled;
-    document.getElementById(`${id}100`).disabled = !enabled;
+    const title = document.getElementById(`${id}-title`);
+    if (enabled) {
+        title.classList.remove('disabled');
+    }
+    else {
+        title.classList.add('disabled');
+    }
+    for (let volume of [0, 25, 50, 75, 100]) {
+        const radio = document.getElementById(`${id}${volume}`);
+        const label = document.getElementById(`${id}${volume}-label`);
+        radio.disabled = !enabled;
+        if (enabled) {
+            label.classList.remove('disabled');
+        }
+        else {
+            label.classList.add('disabled');
+        }
+    }
 }
 function setVolume(target, volume) {
     if (Array.isArray(target)) {

@@ -91,6 +91,11 @@ h3 div {
   padding-bottom: 3px;
 }
 
+.part span.disabled,
+.part label.disabled {
+  color: #999;
+}
+
 .waveform {
   width: 100%;
   display: none;

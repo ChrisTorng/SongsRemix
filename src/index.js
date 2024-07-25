@@ -6,7 +6,7 @@ const piano = document.getElementById('piano');
 const guitar = document.getElementById('guitar');
 const bass = document.getElementById('bass');
 const drum = document.getElementById('drum');
-const allParts = [vocal, other, piano, guitar, bass, drum, original];
+const allParts = [vocal, other, piano, guitar, bass, drum];
 let originalWaveform;
 let vocalWaveform;
 let otherWaveform;
@@ -41,10 +41,10 @@ async function main() {
     songsBaseUrl = gotSongsBaseUrl;
     try {
         songsListDiv.innerHTML = await loadSongsList(songsBaseUrl);
-        // 點擊第一首歌曲以載入
+        // 取得第一首歌曲以自動載入
         const firstSong = document.querySelector('ol li:first-child a');
         if (firstSong) {
-            // 延遲一秒後點擊第一首歌曲
+            // 延遲兩秒後點擊第一首歌曲
             setTimeout(() => {
                 firstSong.click();
             }, 2000);
@@ -70,7 +70,6 @@ async function main() {
     allParts.forEach(audio => {
         audio.volume = defaultVolume / 100;
     });
-    original.volume = 0;
     setPartEnabled('allParts', true);
 }
 function setWaveform() {
@@ -188,13 +187,14 @@ function onPlayerStateChange(event) {
     switch (event.data) {
         case YT.PlayerState.UNSTARTED:
             console.log('onPlayerStateChange UNSTARTED');
-            player.setVolume(1);
+            // player.setVolume(1);
             break;
         case YT.PlayerState.BUFFERING:
             console.log('onPlayerStateChange BUFFERING');
             break;
         case YT.PlayerState.CUED:
             console.log('onPlayerStateChange CUED');
+            setPartEnabled('original', true);
             whenAllPartsReadySetPlay();
             break;
         case YT.PlayerState.PLAYING:
@@ -365,35 +365,32 @@ function setVolume(target, volume) {
     if (Array.isArray(target)) {
         document.getElementById(`allParts${volume}`).checked = true;
         target.forEach(audio => {
-            if (audio === original) {
-                if (volume === 0) {
-                    document.getElementById(`original${defaultVolume}`).checked = true;
-                    original.volume = defaultVolume / 100;
-                }
-                else {
-                    document.getElementById(`original0`).checked = true;
-                    original.volume = 0;
-                }
-                return;
-            }
             document.getElementById(`${audio.id}${volume}`).checked = true;
             audio.volume = volume / 100;
         });
+        if (volume === 0) {
+            document.getElementById(`original${defaultVolume}`).checked = true;
+            player.setVolume(defaultVolume);
+        }
+        else {
+            document.getElementById(`original0`).checked = true;
+            player.setVolume(1);
+        }
         return;
     }
     if (target === original) {
         if (volume === 0) {
             setVolume(allParts, defaultVolume);
             document.getElementById(`original0`).checked = true;
-            original.volume = 0;
+            player.setVolume(1);
             return;
         }
         setVolume(allParts, 0);
         document.getElementById(`original${volume}`).checked = true;
-        original.volume = volume / 100;
+        player.setVolume(volume);
         return;
     }
     document.getElementById(`original0`).checked = true;
-    original.volume = 0;
+    player.setVolume(1);
     target.volume = volume / 100;
 }

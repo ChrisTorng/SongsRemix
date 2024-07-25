@@ -5,7 +5,7 @@ const piano = document.getElementById('piano') as HTMLAudioElement;
 const guitar = document.getElementById('guitar') as HTMLAudioElement;
 const bass = document.getElementById('bass') as HTMLAudioElement;
 const drum = document.getElementById('drum') as HTMLAudioElement;
-const allParts = [vocal, other, piano, guitar, bass, drum, original];
+const allParts = [vocal, other, piano, guitar, bass, drum];
 
 let originalWaveform: HTMLImageElement;
 let vocalWaveform: HTMLImageElement;
@@ -49,10 +49,10 @@ async function main(): Promise<void> {
   try {
     songsListDiv.innerHTML = await loadSongsList(songsBaseUrl);
 
-    // 點擊第一首歌曲以載入
+    // 取得第一首歌曲以自動載入
     const firstSong = document.querySelector('ol li:first-child a') as HTMLAnchorElement;
     if (firstSong) {
-      // 延遲一秒後點擊第一首歌曲
+      // 延遲兩秒後點擊第一首歌曲
       setTimeout(() => {
         firstSong.click();
       }, 2000);
@@ -80,7 +80,6 @@ async function main(): Promise<void> {
   allParts.forEach(audio => {
     audio.volume = defaultVolume / 100;
   });
-  original.volume = 0;
 
   setPartEnabled('allParts', true);
 }
@@ -214,7 +213,7 @@ function onPlayerStateChange(event: { data: number }) {
   switch (event.data) {
     case YT.PlayerState.UNSTARTED:
       console.log('onPlayerStateChange UNSTARTED');
-      player.setVolume(1);
+      // player.setVolume(1);
       break;
 
     case YT.PlayerState.BUFFERING:
@@ -223,6 +222,7 @@ function onPlayerStateChange(event: { data: number }) {
 
     case YT.PlayerState.CUED:
       console.log('onPlayerStateChange CUED');
+      setPartEnabled('original', true);
       whenAllPartsReadySetPlay();
       break;
 
@@ -415,39 +415,37 @@ function setVolume(target: HTMLAudioElement | HTMLAudioElement[], volume: number
     (document.getElementById(`allParts${volume}`)! as HTMLInputElement).checked = true;
 
     target.forEach(audio => {
-      if (audio === original) {
-        if (volume === 0) {
-          (document.getElementById(`original${defaultVolume}`)! as HTMLInputElement).checked = true;
-          original.volume = defaultVolume / 100;
-        } else {
-          (document.getElementById(`original0`)! as HTMLInputElement).checked = true;
-          original.volume = 0;
-        }
-        return;
-      }
-
       (document.getElementById(`${audio.id}${volume}`)! as HTMLInputElement).checked = true;
       audio.volume = volume / 100;
     });
-    return;
+
+    if (volume === 0) {
+      (document.getElementById(`original${defaultVolume}`)! as HTMLInputElement).checked = true;
+      player.setVolume(defaultVolume);
+    } else {
+      (document.getElementById(`original0`)! as HTMLInputElement).checked = true;
+      player.setVolume(1);
+    }
+return;
+
   }
 
   if (target === original) {
     if (volume === 0) {
       setVolume(allParts, defaultVolume);
       (document.getElementById(`original0`)! as HTMLInputElement).checked = true;
-      original.volume = 0;
+      player.setVolume(1);
       return;
     }
 
     setVolume(allParts, 0);
     (document.getElementById(`original${volume}`)! as HTMLInputElement).checked = true;
-    original.volume = volume / 100;
+    player.setVolume(volume);
 
     return;
   }
 
   (document.getElementById(`original0`)! as HTMLInputElement).checked = true;
-  original.volume = 0;
+  player.setVolume(1);
   target.volume = volume / 100;
 }

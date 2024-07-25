@@ -17,7 +17,7 @@ let drumWaveform: HTMLImageElement;
 let allWaveforms: HTMLImageElement[];
 
 const songsListDiv = document.getElementById('songsList') as HTMLDivElement;
-const currentSongTitle = document.getElementById('current-song-title') as HTMLSpanElement;
+const currentSongTitle = document.getElementById('title') as HTMLSpanElement;
 const youtubeLink = document.getElementById('youtube-link') as HTMLAnchorElement;
 const playerLoading = document.getElementById('player_loading') as HTMLDivElement;
 const playOrPause = document.getElementById('playOrPause') as HTMLButtonElement;
@@ -205,8 +205,6 @@ function onPlayerReady(event: { target: YT.Player }) {
   console.log('onPlayerReady');
   player.setVolume(1);
   songsListDiv.style.display = 'block';
-  currentSongTitle.innerText = '請選擇曲目';
-  location.hash = '#head';
 }
 
 function onPlayerStateChange(event: { data: number }) {

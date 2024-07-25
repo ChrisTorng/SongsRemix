@@ -16,7 +16,7 @@ let bassWaveform;
 let drumWaveform;
 let allWaveforms;
 const songsListDiv = document.getElementById('songsList');
-const currentSongTitle = document.getElementById('current-song-title');
+const currentSongTitle = document.getElementById('title');
 const youtubeLink = document.getElementById('youtube-link');
 const playerLoading = document.getElementById('player_loading');
 const playOrPause = document.getElementById('playOrPause');
@@ -180,8 +180,6 @@ function onPlayerReady(event) {
     console.log('onPlayerReady');
     player.setVolume(1);
     songsListDiv.style.display = 'block';
-    currentSongTitle.innerText = '請選擇曲目';
-    location.hash = '#head';
 }
 function onPlayerStateChange(event) {
     switch (event.data) {

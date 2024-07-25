@@ -41,17 +41,7 @@ async function main() {
     songsBaseUrl = gotSongsBaseUrl;
     try {
         songsListDiv.innerHTML = await loadSongsList(songsBaseUrl);
-        // 取得第一首歌曲以自動載入
-        const firstSong = document.querySelector('ol li:first-child a');
-        if (firstSong) {
-            // 延遲兩秒後點擊第一首歌曲
-            setTimeout(() => {
-                firstSong.click();
-            }, 2000);
-        }
-        else {
-            console.error('找不到第一首歌曲');
-        }
+        clickFirstSong();
     }
     catch (e) {
         songsListDiv.innerText = e.toString();
@@ -71,6 +61,21 @@ async function main() {
         audio.volume = defaultVolume / 100;
     });
     setPartEnabled('allParts', true);
+}
+function clickFirstSong() {
+    console.log('clickFirstSong', player, player?.getPlayerState?.());
+    if (!player || player?.getPlayerState?.() !== YT.PlayerState.CUED) {
+        setTimeout(clickFirstSong, 100);
+        return;
+    }
+    // 取得第一首歌曲以自動載入
+    const firstSong = document.querySelector('ol li:first-child a');
+    if (firstSong) {
+        firstSong.click();
+    }
+    else {
+        console.error('找不到第一首歌曲');
+    }
 }
 function setWaveform() {
     originalWaveform = document.getElementById('original-waveform');
@@ -179,7 +184,6 @@ function onYouTubeIframeAPIReady() {
 function onPlayerReady(event) {
     console.log('onPlayerReady');
     player.setVolume(1);
-    songsListDiv.style.display = 'block';
 }
 function onPlayerStateChange(event) {
     switch (event.data) {

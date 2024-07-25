@@ -41,6 +41,17 @@ async function main() {
     songsBaseUrl = gotSongsBaseUrl;
     try {
         songsListDiv.innerHTML = await loadSongsList(songsBaseUrl);
+        // 點擊第一首歌曲以載入
+        const firstSong = document.querySelector('ol li:first-child a');
+        if (firstSong) {
+            // 延遲一秒後點擊第一首歌曲
+            setTimeout(() => {
+                firstSong.click();
+            }, 1000);
+        }
+        else {
+            console.error('找不到第一首歌曲');
+        }
     }
     catch (e) {
         songsListDiv.innerText = e.toString();

@@ -55,7 +55,7 @@ async function main(): Promise<void> {
       // 延遲一秒後點擊第一首歌曲
       setTimeout(() => {
         firstSong.click();
-      }, 1000);
+      }, 2000);
     } else {
       console.error('找不到第一首歌曲');
     }

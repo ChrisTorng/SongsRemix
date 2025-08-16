@@ -209,14 +209,14 @@ function onYouTubeIframeAPIReady() {
 
 function onPlayerReady(event: { target: YT.Player }) {
   console.log('onPlayerReady');
-  player.setVolume(1);
+  player.setVolume(0);
 }
 
 function onPlayerStateChange(event: { data: number }) {
   switch (event.data) {
     case YT.PlayerState.UNSTARTED:
       console.log('onPlayerStateChange UNSTARTED');
-      // player.setVolume(1);
+      // player.setVolume(0);
       break;
 
     case YT.PlayerState.BUFFERING:
@@ -427,7 +427,7 @@ function setVolume(target: HTMLAudioElement | HTMLAudioElement[], volume: number
       player.setVolume(defaultVolume);
     } else {
       (document.getElementById(`original0`)! as HTMLInputElement).checked = true;
-      player.setVolume(1);
+      player.setVolume(0);
     }
     return;
   }
@@ -436,7 +436,7 @@ function setVolume(target: HTMLAudioElement | HTMLAudioElement[], volume: number
     if (volume === 0) {
       setVolume(allParts, defaultVolume);
       (document.getElementById(`original0`)! as HTMLInputElement).checked = true;
-      player.setVolume(1);
+      player.setVolume(0);
       return;
     }
 
@@ -448,6 +448,6 @@ function setVolume(target: HTMLAudioElement | HTMLAudioElement[], volume: number
   }
 
   (document.getElementById(`original0`)! as HTMLInputElement).checked = true;
-  player.setVolume(1);
+  player.setVolume(0);
   target.volume = volume / 100;
 }

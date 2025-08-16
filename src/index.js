@@ -183,13 +183,13 @@ function onYouTubeIframeAPIReady() {
 }
 function onPlayerReady(event) {
     console.log('onPlayerReady');
-    player.setVolume(1);
+    player.setVolume(0);
 }
 function onPlayerStateChange(event) {
     switch (event.data) {
         case YT.PlayerState.UNSTARTED:
             console.log('onPlayerStateChange UNSTARTED');
-            // player.setVolume(1);
+            // player.setVolume(0);
             break;
         case YT.PlayerState.BUFFERING:
             console.log('onPlayerStateChange BUFFERING');
@@ -376,7 +376,7 @@ function setVolume(target, volume) {
         }
         else {
             document.getElementById(`original0`).checked = true;
-            player.setVolume(1);
+            player.setVolume(0);
         }
         return;
     }
@@ -384,7 +384,7 @@ function setVolume(target, volume) {
         if (volume === 0) {
             setVolume(allParts, defaultVolume);
             document.getElementById(`original0`).checked = true;
-            player.setVolume(1);
+            player.setVolume(0);
             return;
         }
         setVolume(allParts, 0);
@@ -393,6 +393,6 @@ function setVolume(target, volume) {
         return;
     }
     document.getElementById(`original0`).checked = true;
-    player.setVolume(1);
+    player.setVolume(0);
     target.volume = volume / 100;
 }

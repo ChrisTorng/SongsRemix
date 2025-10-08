@@ -254,6 +254,7 @@ function onPlayerStateChange(event: { data: number }) {
 
     case YT.PlayerState.ENDED:
       console.log('onPlayerStateChange ENDED');
+      restartPlayback();
       break;
   }
 }
@@ -382,15 +383,18 @@ function traceTiming(): void {
   });
 }
 
-function onEnded(): any {
-  playOrPause.innerHTML = '▶';
+function restartPlayback(): void {
   progress.value = 0;
-  player.pauseVideo();
   player.seekTo(0, true);
   allParts.forEach(audio => {
-    audio.pause();
     audio.currentTime = 0;
   });
+  player.playVideo();
+}
+
+function onEnded(): any {
+  playOrPause.innerHTML = '▶';
+  restartPlayback();
 };
 
 function setPartEnabled(id: string, enabled: boolean): void {

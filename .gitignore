@@ -1,3 +1,7 @@
 /node_modules/**
 /src/**/*.js
 /src/**/*.js.map
+
+# Keep the compiled scripts tracked for static hosting
+!/src/index.js
+!/src/songsList.js

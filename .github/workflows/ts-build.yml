@@ -52,6 +52,16 @@ jobs:
           echo "Copying files to _site..."
           rsync -av --exclude='node_modules' --exclude='.git' --exclude='_site' ./ _site/
           
+          # Remove ignore files so Pages keeps emitted assets
+          if [ -f _site/.gitignore ]; then
+            echo "Removing _site/.gitignore to avoid Pages filtering emitted JS"
+            rm _site/.gitignore
+          fi
+          if [ -f _site/.gitattributes ]; then
+            echo "Removing _site/.gitattributes to avoid unintended filters"
+            rm _site/.gitattributes
+          fi
+
           # List compiled JS files to verify
           echo "Verifying JS files in _site/src/..."
           ls -la _site/src/*.js || echo "Warning: No JS files in _site/src/"

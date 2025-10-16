@@ -37,6 +37,25 @@ jobs:
       - name: Compile TypeScript
         run: npm run build
 
+      - name: Verify compiled JavaScript files exist
+        run: |
+          echo "Checking compiled JavaScript files..."
+          ls -la src/*.js || echo "No JS files found in src/"
+          
+      - name: Prepare deployment directory
+        if: github.event_name != 'pull_request'
+        run: |
+          echo "Creating deployment directory..."
+          mkdir -p _site
+          
+          # Copy all files except node_modules and .git
+          echo "Copying files to _site..."
+          rsync -av --exclude='node_modules' --exclude='.git' --exclude='_site' ./ _site/
+          
+          # List compiled JS files to verify
+          echo "Verifying JS files in _site/src/..."
+          ls -la _site/src/*.js || echo "Warning: No JS files in _site/src/"
+
       - name: Upload compiled JavaScript as artifact
         uses: actions/upload-artifact@v4
         with:
@@ -54,7 +73,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         if: github.event_name != 'pull_request'
         with:
-          path: '.'
+          path: '_site'
 
   deploy:
     environment:

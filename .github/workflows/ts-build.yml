@@ -23,76 +23,42 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Install dependencies
-        run: npm install
+      - run: npm install
 
-      - name: Compile TypeScript
-        run: npm run build
+      - run: npm run build
 
-      - name: Verify compiled JavaScript files exist
-        run: |
-          echo "Checking compiled JavaScript files..."
-          ls -la src/*.js || echo "No JS files found in src/"
-          
-      - name: Prepare deployment directory
+      - name: Prepare Pages artifact
         if: github.event_name != 'pull_request'
         run: |
-          echo "Creating deployment directory..."
-          mkdir -p _site
-          
-          # Copy all files except node_modules and .git
-          echo "Copying files to _site..."
-          rsync -av --exclude='node_modules' --exclude='.git' --exclude='_site' ./ _site/
-          
-          # Remove ignore files so Pages keeps emitted assets
-          if [ -f _site/.gitignore ]; then
-            echo "Removing _site/.gitignore to avoid Pages filtering emitted JS"
-            rm _site/.gitignore
-          fi
-          if [ -f _site/.gitattributes ]; then
-            echo "Removing _site/.gitattributes to avoid unintended filters"
-            rm _site/.gitattributes
-          fi
+          rsync -a --delete \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='node_modules' \
+            --exclude='_site' \
+            ./ _site/
+          rm -f _site/.gitignore _site/.gitattributes
 
-          # List compiled JS files to verify
-          echo "Verifying JS files in _site/src/..."
-          ls -la _site/src/*.js || echo "Warning: No JS files in _site/src/"
-
-      - name: Upload compiled JavaScript as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: compiled-js
-          path: |
-            src/**/*.js
-            src/**/*.js.map
-          if-no-files-found: error
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
+      - uses: actions/configure-pages@v4
         if: github.event_name != 'pull_request'
 
-      - name: Upload artifact for GitHub Pages
-        uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v3
         if: github.event_name != 'pull_request'
         with:
-          path: '_site'
+          path: _site
 
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
     if: github.event_name != 'pull_request'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
+      - id: deployment
         uses: actions/deploy-pages@v4

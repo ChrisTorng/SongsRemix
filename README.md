@@ -1,14 +1,14 @@
 [English](#songsremix-english)
 
-# [SongsRemix](https://christorng.github.io/SongsRemix/src/)
+# [SongsRemix](https://christorng.idv.tw/SongsRemix/src/)
 
 事前製作區分六軌 (人聲、鼓組、貝斯、吉它、鋼琴、其他) 之音檔及波形圖，藉由此工具可以分享給大家。大家可以機動調整各軌之音量，與 YouTube 畫面一起播放。是設計給練團前各樂手及歌手需要仔細聽自己的 樂器/聲部 來做學習，亦可配合自我練習之用。
 
 目前有下列曲目庫:
-* [範例曲目庫](https://christorng.github.io/SongsRemixDemo/) ([原始碼](https://github.com/ChrisTorng/SongsRemixDemo))
-* [UP 生命力教會](https://christorng.github.io/UpLifeSongs/) ([原始碼](https://github.com/ChrisTorng/UpLifeSongs))
-* [UP 生命力教會舊版](https://christorng.github.io/UpLifeSongsBackup/) ([原始碼](https://github.com/ChrisTorng/UpLifeSongsBackup/))
-* [音控訓練](https://christorng.github.io/AudioLeadershipSongs/) ([原始碼](https://github.com/ChrisTorng/AudioLeadershipSongs))
+* [範例曲目庫](https://christorng.idv.tw/SongsRemixDemo/) ([原始碼](https://github.com/ChrisTorng/SongsRemixDemo))
+* [UP 生命力教會](https://christorng.idv.tw/UpLifeSongs/) ([原始碼](https://github.com/ChrisTorng/UpLifeSongs))
+* [UP 生命力教會舊版](https://christorng.idv.tw/UpLifeSongsBackup/) ([原始碼](https://github.com/ChrisTorng/UpLifeSongsBackup/))
+* [音控訓練](https://christorng.idv.tw/AudioLeadershipSongs/) ([原始碼](https://github.com/ChrisTorng/AudioLeadershipSongs))
 
 歡迎任何貢獻，包括程式、畫面、自動化工具與教學文件等。而若有新曲目則建議建立自己的曲目庫，並請發 [Issue](https://github.com/ChrisTorng/SongsRemix/issues) 通知我加入上述清單。
 
@@ -57,9 +57,9 @@ npm install
 tsc -w
 ```
 
-# [SongsRemix](https://christorng.github.io/SongsRemix/src/) English
+# [SongsRemix](https://christorng.idv.tw/SongsRemix/src/) English
 
-Live remix splitted song's vocal and instruments. Designed for pratices. [Live demo](https://christorng.github.io/SongsRemix/src/).
+Live remix splitted song's vocal and instruments. Designed for pratices. [Live demo](https://christorng.idv.tw/SongsRemix/src/).
 
 
 Welcome any contribution, including coding, layout and new songs.
